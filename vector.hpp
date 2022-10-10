@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/08 18:45:42 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/10 18:51:36 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ namespace ft {
 			}
 			
 			vector& operator= (const vector& x) {
-				_alloc = x._alloc;
 				for (size_type i = 0; i < _size; ++i)
 					_alloc.destroy(_ptr + i);
 				if (_capacity)
@@ -89,6 +88,27 @@ namespace ft {
 			allocator_type get_allocator() const {
 				return _alloc;
 			}
+			void assign( size_type count, const T& value ) {
+				for (size_type i = 0; i < _size; ++i)
+					_alloc.destroy(_ptr + i);
+				if (_capacity)
+					_alloc.deallocate(_ptr, _capacity);
+				_alloc.allocate(count);
+				for (size_type i = 0; i < count; ++i)
+					_alloc.construct(_ptr + i, value);
+				_size = count;
+			}
+			template< class InputIt > void assign( InputIt first, InputIt last ) {
+				for (size_type i = 0; i < _size; ++i)
+					_alloc.destroy(_ptr + i);
+				if (_capacity)
+					_alloc.deallocate(_ptr, _capacity);
+				difference_type dist = std::distance(first, last);
+				_alloc.allocate(dist);
+				for (size_type i = 0; i < dist && first != last; ++i, ++first)
+					_alloc.construct(_ptr + i, *first);
+				_size = static_cast<size_type>(dist);
+			}
 			/******************** Iterators ********************/
 			/*
 			**	TODO: Use my own iterators
@@ -100,10 +120,9 @@ namespace ft {
 			*/
 		
 			/******************** Capacity ********************/
-			size_type max_size() const {return _alloc.max_size();}
 			bool empty() const {return (_size == 0 ? true : false);}
 			size_type size() const {return _size;}
-			size_type capacity() const {return _capacity;}
+			size_type max_size() const {return _alloc.max_size();}
 			void reserve( size_type new_cap ) {
 				if(new_cap > max_size())
 					throw std::length_error("The size requested is greater than the maximum size!");
@@ -119,7 +138,13 @@ namespace ft {
 					_capacity = new_cap;
 				}
 			}
+			size_type capacity() const {return _capacity;}
 			/******************** Modifiers ********************/
+			void clear() {
+				for(size_type i = 0; i < _size; ++i)
+					_alloc.destroy(_ptr + i);
+				_size = 0;
+			}
 			void push_back( const T& value ) {
 				if (_capacity == 0)
 					reserve(1);
@@ -134,17 +159,33 @@ namespace ft {
 				_alloc.destruct(_ptr + _size);
 				_size--;
 			}
-			void clear() {
-				for(size_type i = 0; i < _size; ++i)
-					_alloc.destroy(_ptr + i);
-				_size = 0;
-			}
 			void swap( vector& other ) {
 				std::swap(_size, other._size);
 				std::swap(_capacity, other._capacity);
 				std::swap(_ptr, other._ptr);
 			}
-		
+			iterator insert (iterator position, const value_type& val) {
+				vector<value_type>	tmp;
+
+				tmp.assign(position, end());
+				_size = std::distance(begin(), position);
+				push_back(val);
+				for (size_type i = _size; i < _size + tmp.size(); ++i)
+					push_back(tmp[i]);
+			}
+			void insert (iterator position, size_type n, const value_type& val) {
+				vector<value_type>	tmp;
+
+				tmp.assign(position, end());
+				_size = std::distance(begin(), position);
+				for (size_type i = 0;i < n; ++i)
+					push_back(val);
+				for(size_type i = _size + n; i < _size + n + tmp.size(); ++i)
+					push_back(tmp[i]);
+			}
+			template <class InputIterator> void insert (iterator position, InputIterator first, InputIterator last) {
+				
+			}
 		private:
 			allocator_type	_alloc;
 			size_type		_size;
