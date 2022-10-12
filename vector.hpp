@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/11 17:39:09 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:32:31 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 # define VECTOR_HPP
 
 # include <iostream>
+# include <iterator>
+# include "iterators.hpp"
+# include "lexicographical_compare.hpp"
+
+//	TODO : test insert() and erase() after implementing enable_if ////////////////////////
 
 namespace ft {
 	template< class T, class Allocator = std::allocator<T> > class vector {
@@ -26,12 +31,8 @@ namespace ft {
 			typedef typename allocator_type::const_pointer			const_pointer;
 			typedef ft::random_access_iterator<value_type>			iterator;
 			typedef ft::random_access_iterator<const value_type>	const_iterator;
-			/*
-			**	TODO: implement my own reverse iterators
-			**
-			**	typedef std::reverse_iterator<iterator>					reverse_iterator;
-			**	typedef std::reverse_iterator<const_iterator>			const_reverse_iterator;
-			*/
+			typedef ft::reverse_iterator<iterator>					reverse_iterator;
+			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 			typedef ptrdiff_t										difference_type;
 			typedef std::size_t										size_type;
 
@@ -46,7 +47,7 @@ namespace ft {
 				for(size_type i = 0; i < n; ++i)
 					_alloc.construct(_ptr + i, val);
 			}
-			
+			// TODO : implement enable_if ///////////////////////////////////////////////////////				
 			template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
 				difference_type size = std::distance(first, last);
 				_size = size;
@@ -58,13 +59,11 @@ namespace ft {
 					first++;
 				}
 			}
-			
 			vector (const vector& x) {
 				_size = 0;
 				_capacity = 0;
 				*this = x;
 			}
-			
 			vector& operator= (const vector& x) {
 				for (size_type i = 0; i < _size; ++i)
 					_alloc.destroy(_ptr + i);
@@ -89,25 +88,18 @@ namespace ft {
 				return _alloc;
 			}
 			void assign( size_type count, const T& value ) {
-				for (size_type i = 0; i < _size; ++i)
-					_alloc.destroy(_ptr + i);
-				if (_capacity)
-					_alloc.deallocate(_ptr, _capacity);
-				_alloc.allocate(count);
-				for (size_type i = 0; i < count; ++i)
-					_alloc.construct(_ptr + i, value);
-				_size = count;
+				_size = 0;
+				reserve(count);
+				for(int i = 0; i < count; ++i)
+					push_back(value);
 			}
+			// TODO : implement enalble_if //////////////////////////////////////////////
 			template< class InputIt > void assign( InputIt first, InputIt last ) {
-				for (size_type i = 0; i < _size; ++i)
-					_alloc.destroy(_ptr + i);
-				if (_capacity)
-					_alloc.deallocate(_ptr, _capacity);
-				difference_type dist = std::distance(first, last);
-				_alloc.allocate(dist);
-				for (size_type i = 0; i < dist && first != last; ++i, ++first)
-					_alloc.construct(_ptr + i, *first);
-				_size = static_cast<size_type>(dist);
+				difference_type dist = static_cast<size_type>(std::distance(first, last));
+				reserve(dist);
+				for (;first != last; ++first)
+						push_back(*first);
+				_size = dist;
 			}
 			/******************** Iterators ********************/
 			iterator begin() {return iterator(_ptr);}
@@ -116,9 +108,8 @@ namespace ft {
 			const_iterator end() const {return const_iterator(_ptr + _size);}
 			reverse_iterator rbegin() {return reverse_iterator(end());}
 			const_reverse_iterator rbegin() const {return const_reverse_iterator(end());}
-			reverse_iterator rend() {return reverse_end(begin());}
-			const_reverse_iterator rend() const {return const_reverse_iterator(begin();)}
-					
+			reverse_iterator rend() {return reverse_iterator(begin());}
+			const_reverse_iterator rend() const {return const_reverse_iterator(begin());}	
 			/******************** Capacity ********************/
 			bool empty() const {return (_size == 0 ? true : false);}
 			size_type size() const {return _size;}
@@ -129,7 +120,7 @@ namespace ft {
 				else if (new_cap > _capacity) {
 					pointer	newptr = _alloc.allocate(new_cap);
 					for(size_type i = 0; i < _size; ++i)
-						_alloc.constrct(newptr + i, _ptr[i]);
+						_alloc.construct(newptr + i, _ptr[i]);
 					for(size_type i = 0; i < _size; ++i)
 						_alloc.destroy(_ptr + i);
 					if (_capacity)
@@ -149,7 +140,7 @@ namespace ft {
 				vector<value_type>	tmp;
 
 				tmp.assign(position, end());
-				_size = std::distance(begin(), position);
+				_size = static_cast<size_type>(std::distance(begin(), position));
 				push_back(val);
 				for (size_type i = _size; i < _size + tmp.size(); ++i)
 					push_back(tmp[i]);
@@ -158,7 +149,7 @@ namespace ft {
 				vector<value_type>	tmp;
 
 				tmp.assign(position, end());
-				_size = std::distance(begin(), position);
+				_size = static_cast<size_type>(std::distance(begin(), position));
 				for (size_type i = 0;i < n; ++i)
 					push_back(val);
 				for(size_type i = _size + n; i < _size + n + tmp.size(); ++i)
@@ -168,7 +159,7 @@ namespace ft {
 				vector<value_type>	tmp;
 				
 				tmp.assign(position, end());
-				_size = std::distance(begin(), position);
+				_size = static_cast<size_type>(std::distance(begin(), position));
 				for (; first != last; ++first)
 					push_back(*first);
 				push_back(*last);
@@ -206,7 +197,7 @@ namespace ft {
 			void pop_back() {
 				if (_size == 0)
 					return ;
-				_alloc.destruct(_ptr + _size);
+				_alloc.destroy(_ptr + _size);
 				_size--;
 			}
 			void resize( size_type count, T value = T() ) {
@@ -245,43 +236,44 @@ namespace ft {
 			const_reference back() const {return _ptr[_size - 1];}
 			T* data() {return _ptr;}
 			const T* data() const {return _ptr;}
-			/******************** Non-member functions ********************/
-			template< class T, class Alloc >
-			bool operator==( const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs ) {
-				if (lhs.size() != rhs.size())
-					return false;
-				for (size_type i = 0; i < lhs.size(); ++i) {
-					if (lhs[i] != rhs[i])
-						return false;
-				}
-				return true;
-			}
-			template< class T, class Alloc >
-			bool operator!=( const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs ) {
-				return !(lhs == rhs);
-			}
-			template< class T, class Alloc >
-			bool operator<( const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs ) {
-				return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
-			}
-			template< class T, class Alloc >
-			bool operator>=( const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs ) {
-				return !(lhs < rhs);
-			}
-			template< class T, class Alloc >
-			bool operator>( const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs ) {
-				return lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
-			}
-			template< class T, class Alloc >
-			bool operator<=( const std::vector<T,Alloc>& lhs, const std::vector<T,Alloc>& rhs ) {
-				return !(lhs > rhs);
-			}
+
 		private:
 			allocator_type	_alloc;
 			size_type		_size;
 			size_type		_capacity;
 			pointer			_ptr;
 	};
+	/********************  Non Member functions ********************/
+	template< class U, class Alloc >
+	bool operator==( const ft::vector<U,Alloc>& lhs, const ft::vector<U,Alloc>& rhs ) {
+		if (lhs.size() != rhs.size())
+			return false;
+		for (std::size_t i = 0; i < lhs.size(); ++i) {
+			if (lhs[i] != rhs[i])
+				return false;
+		}
+		return true;
+	}
+	template< class U, class Alloc >
+	bool operator!=( const ft::vector<U,Alloc>& lhs, const ft::vector<U,Alloc>& rhs ) {
+		return !(lhs == rhs);
+	}
+	template< class U, class Alloc >
+	bool operator<( const ft::vector<U,Alloc>& lhs, const ft::vector<U,Alloc>& rhs ) {
+		return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	}
+	template< class U, class Alloc >
+	bool operator>=( const ft::vector<U,Alloc>& lhs, const ft::vector<U,Alloc>& rhs ) {
+		return !(lhs < rhs);
+	}
+	template< class U, class Alloc >
+	bool operator>( const ft::vector<U,Alloc>& lhs, const ft::vector<U,Alloc>& rhs ) {
+		return lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
+	}
+	template< class U, class Alloc >
+	bool operator<=( const ft::vector<U,Alloc>& lhs, const ft::vector<U,Alloc>& rhs ) {
+		return !(lhs > rhs);
+	}
 }
 
 

@@ -6,25 +6,25 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:35:47 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/10 15:17:45 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:26:15 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// TODO: fix the issue of reverse_iterator + number not working
+
 #include "vector.hpp"
 #include <vector>
+
 int	main(void) {
 
-	std::vector<int> vect;
+	ft::vector<int>	vect1(2, 10);
+	ft::vector<int>	vect2(2, 20);
+	ft::vector<int>::reverse_iterator	it;
+	ft::vector<int>::reverse_iterator	it2;
+	it = vect1.rbegin();
+	it2 = vect2.rbegin();
 
-	for (int i = 0; i < 5; ++i)
-		vect.push_back(i);
-	
-	std::cout << std::endl << vect.size() << std::endl;
-
-	vect.assign(2, 10);
-	for (size_t i = 0; i < 5; ++i)
-		std::cout << vect[i] << " ";
-
-	std::cout << std::endl << vect.size() << std::endl;
+	std::cout << *it << std::endl;
+	std::cout << *it2 << std::endl;
 	return 0;
 }
