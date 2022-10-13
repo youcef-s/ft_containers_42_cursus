@@ -6,13 +6,15 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/12 16:30:22 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/13 19:54:17 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATORS_HPP
 # define ITERATORS_HPP
 # include <iostream>
+
+// TODO fix operator- for two random_access iterators (a-b)
 
 namespace ft {
 	/********************  iterator_traits ********************/
@@ -87,9 +89,6 @@ namespace ft {
 			random_access_iterator operator-(int n) {
 				return random_access_iterator(_ptr - n);
 			}
-			random_access_iterator operator-(const random_access_iterator & it) {
-				return random_access_iterator(_ptr - it.base());
-			}
 			random_access_iterator &operator+=(int n) {
 				_ptr += n;
 				return *this;
@@ -99,10 +98,10 @@ namespace ft {
 				return *this;
 			}
 			reference &operator[](int n) {return _ptr[n];}
-			// operator random_access_iterator<const T>() const {
-			// 	return (random_access_iterator<const T>(_ptr));
-			// }
 	};
+	// template <typename T> typename ft::random_access_iterator<T>::difference_type operator-(const ft::random_access_iterator<T> lhs, const ft::random_access_iterator<T> rhs) {
+	// 	return (lhs.base() - rhs.base());
+	// }
 	template <class Iterator> bool operator==(const random_access_iterator<Iterator> &lhs, const random_access_iterator<Iterator> &rhs) {
 		return (lhs.base() == rhs.base());
 	}

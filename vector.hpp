@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/12 16:32:31 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/13 19:52:31 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@
 # include <iterator>
 # include "iterators.hpp"
 # include "lexicographical_compare.hpp"
-
-//	TODO : test insert() and erase() after implementing enable_if ////////////////////////
+# include "is_integral.hpp"
 
 namespace ft {
 	template< class T, class Allocator = std::allocator<T> > class vector {
@@ -46,9 +45,9 @@ namespace ft {
 				_ptr = _alloc.allocate(n);
 				for(size_type i = 0; i < n; ++i)
 					_alloc.construct(_ptr + i, val);
-			}
-			// TODO : implement enable_if ///////////////////////////////////////////////////////				
-			template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+			}			
+			template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 				difference_type size = std::distance(first, last);
 				_size = size;
 				_capacity = size;
@@ -90,11 +89,11 @@ namespace ft {
 			void assign( size_type count, const T& value ) {
 				_size = 0;
 				reserve(count);
-				for(int i = 0; i < count; ++i)
+				for(size_type i = 0; i < count; ++i)
 					push_back(value);
 			}
-			// TODO : implement enalble_if //////////////////////////////////////////////
-			template< class InputIt > void assign( InputIt first, InputIt last ) {
+			template< class InputIt > void assign( InputIt first, InputIt last,
+			typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = NULL) {
 				difference_type dist = static_cast<size_type>(std::distance(first, last));
 				reserve(dist);
 				for (;first != last; ++first)
@@ -144,6 +143,7 @@ namespace ft {
 				push_back(val);
 				for (size_type i = _size; i < _size + tmp.size(); ++i)
 					push_back(tmp[i]);
+				return (position);
 			}
 			void insert (iterator position, size_type n, const value_type& val) {
 				vector<value_type>	tmp;
@@ -170,7 +170,7 @@ namespace ft {
 			iterator erase( iterator pos ) {
 				if (pos == end())
 					return end();
-				_alloc.destroy(pos);
+				_alloc.destroy(&(*pos));
 				for (;pos != end(); ++pos)
 					insert(pos, *(pos + 1));
 				_size--;
@@ -180,7 +180,7 @@ namespace ft {
 				if (std::distance(first, last) == 0)
 					return last;
 				for (iterator it = first; it != last; ++it)
-					_alloc.destroy(first);
+					_alloc.destroy(&(*first));
 				if (last == end())
 					return end();
 				for (; first != last; ++first)
