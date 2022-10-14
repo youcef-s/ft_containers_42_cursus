@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/13 19:52:31 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/14 16:05:30 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ namespace ft {
 			template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 				difference_type size = std::distance(first, last);
-				_size = size;
-				_capacity = size;
+				_size = static_cast<size_type>(size);
+				_capacity = static_cast<size_type>(size);
 				_alloc = alloc;
 				_ptr = _alloc.allocate(size);
 				for(difference_type i = 0; i < size; ++i) {
@@ -72,7 +72,7 @@ namespace ft {
 				_size = x._size;
 				_alloc = x._alloc;
 				if (_capacity)
-					_alloc.allocate(_capacity);
+					_ptr = _alloc.allocate(_capacity);
 				for(size_type i = 0; i < _size; ++i)
 					_alloc.construct(_ptr + i, x._ptr[i]);
 				return *this;
@@ -95,6 +95,7 @@ namespace ft {
 			template< class InputIt > void assign( InputIt first, InputIt last,
 			typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = NULL) {
 				difference_type dist = static_cast<size_type>(std::distance(first, last));
+				clear();
 				reserve(dist);
 				for (;first != last; ++first)
 						push_back(*first);
@@ -141,7 +142,7 @@ namespace ft {
 				tmp.assign(position, end());
 				_size = static_cast<size_type>(std::distance(begin(), position));
 				push_back(val);
-				for (size_type i = _size; i < _size + tmp.size(); ++i)
+				for (size_type i = 0; i < tmp.size(); ++i)
 					push_back(tmp[i]);
 				return (position);
 			}
@@ -152,39 +153,47 @@ namespace ft {
 				_size = static_cast<size_type>(std::distance(begin(), position));
 				for (size_type i = 0;i < n; ++i)
 					push_back(val);
-				for(size_type i = _size + n; i < _size + n + tmp.size(); ++i)
+				for(size_type i = 0; i < tmp.size(); ++i)
 					push_back(tmp[i]);
 			}
-			template <class InputIterator> void insert (iterator position, InputIterator first, InputIterator last) {
+			template <class InputIterator> void insert (iterator position, InputIterator first, InputIterator last,
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 				vector<value_type>	tmp;
 				
 				tmp.assign(position, end());
 				_size = static_cast<size_type>(std::distance(begin(), position));
 				for (; first != last; ++first)
 					push_back(*first);
-				push_back(*last);
 				difference_type	dist = std::distance(first, last);
-				for (size_type i = 0; i < _size + static_cast<size_type>(dist); ++i)
+				for (size_type i = 0; i < tmp.size(); ++i)
 					push_back(tmp[i]);
 			}
 			iterator erase( iterator pos ) {
 				if (pos == end())
 					return end();
 				_alloc.destroy(&(*pos));
-				for (;pos != end(); ++pos)
-					insert(pos, *(pos + 1));
+				for (;pos != end(); ++pos) {
+					_alloc.construct(&*pos, *(pos + 1));
+					_alloc.destroy(&*(pos + 1));
+				}
 				_size--;
 				return pos;
 			}
 			iterator erase( iterator first, iterator last ) {
-				if (std::distance(first, last) == 0)
+				difference_type	dist = std::distance(first, last);
+				if (dist == 0)
 					return last;
-				for (iterator it = first; it != last; ++it)
+				iterator it = first;
+				for(;first != last; ++first)
 					_alloc.destroy(&(*first));
 				if (last == end())
 					return end();
-				for (; first != last; ++first)
-					insert(first, *(first + 1));
+				for (;it != end(); ++it, ++first) {
+					_alloc.construct(&*it, *first);
+					_alloc.destroy(&*first);
+				}
+				_size -= static_cast<size_type>(dist);
+				return it;
 			}
 			void push_back( const T& value ) {
 				if (_capacity == 0)
@@ -274,7 +283,9 @@ namespace ft {
 	bool operator<=( const ft::vector<U,Alloc>& lhs, const ft::vector<U,Alloc>& rhs ) {
 		return !(lhs > rhs);
 	}
+	template <class T, class Alloc>  void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
+	}
 }
-
 
 #endif
