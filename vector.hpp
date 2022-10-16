@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/14 16:05:30 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/16 16:05:02 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,6 @@ namespace ft {
 				_size = static_cast<size_type>(std::distance(begin(), position));
 				for (; first != last; ++first)
 					push_back(*first);
-				difference_type	dist = std::distance(first, last);
 				for (size_type i = 0; i < tmp.size(); ++i)
 					push_back(tmp[i]);
 			}

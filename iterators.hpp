@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/14 17:09:22 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/16 16:15:49 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,15 @@ namespace ft {
 			pointer operator->(void) {return &(operator*());}
 			random_access_iterator & operator++(void) {++_ptr; return *this;}
 			random_access_iterator & operator--(void) {--_ptr; return *this;}
-			random_access_iterator & operator++(int) {
-				random_access_iterator *tmp = this;
+			random_access_iterator operator++(int) {
+				random_access_iterator tmp(*this);
 				++_ptr;
-				return *tmp;
+				return tmp;
 			}
-			random_access_iterator & operator--(int) {
-				random_access_iterator *tmp = this;
+			random_access_iterator operator--(int) {
+				random_access_iterator tmp = *this;
 				--_ptr;
-				return *tmp;
+				return tmp;
 			}
 			random_access_iterator operator+(int n) const {
 				return random_access_iterator(_ptr + n);
