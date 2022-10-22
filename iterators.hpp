@@ -6,13 +6,15 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/18 10:40:32 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/22 12:55:44 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATORS_HPP
 # define ITERATORS_HPP
+
 # include <iostream>
+# include "avl.hpp"
 
 namespace ft {
 	/********************  iterator_traits ********************/
@@ -178,6 +180,68 @@ namespace ft {
 	template <class Iter1, class Iter2> typename reverse_iterator<Iter1>::difference_type operator- (const reverse_iterator<Iter1>& lhs, const reverse_iterator<Iter2>& rhs) {
 		return rhs.base() - lhs.base();
 	}
+	/********************  Bidirectional iterator ********************/
+	template<typename T, typename Comp, typename Alloc> class bidirectional_iterator {
+		private:
+			T*						_ptr;
+			Tree<T, Comp , Alloc >*	_avl;
+		public:
+			typedef T											value_type;
+			typedef std::bidirectional_iterator_tag				iterator_category;
+			typedef T*											pointer;
+			typedef T&											reference;
+			typedef ptrdiff_t									difference_type;
+
+			bidirectional_iterator() : _ptr(NULL) , _avl(NULL) {}
+			bidirectional_iterator(pointer ptr, Tree<T, Comp, Alloc>* avl) : _ptr(ptr), _avl(avl) {}
+			bidirectional_iterator(const bidirectional_iterator & copy) : _ptr(copy._ptr), _avl(copy._avl) {}
+			bidirectional_iterator & operator=(const bidirectional_iterator & assign) {
+				_ptr = assign._ptr;
+				_avl = assign._avl;
+				return *this;
+			}
+			~bidirectional_iterator() {}
+			bool operator==(const bidirectional_iterator & it) {
+				return _ptr == it._ptr;
+			}
+			bool operator!=(const bidirectional_iterator & it) {
+				return _ptr != it._ptr;
+			}
+			reference operator*() {return *_ptr;}
+			pointer operator->() {return &(operator*());}
+			bidirectional_iterator & operator++() {
+				Node<T, Alloc>*	node = _avl->search(_avl->root, *_ptr);
+				if (!node)
+					return NULL;
+				Node<T, Alloc>*	succ = _avl->successor(*_ptr);
+				if (succ)
+					_ptr = succ->data;
+				else
+					_ptr = NULL;
+				return *this;
+			}
+			bidirectional_iterator & operator--() {
+				Node<T, Alloc>*	node = _avl->search(_avl->root, *_ptr);
+				if (!node)
+					return NULL;
+				Node<T, Alloc>*	succ = _avl->predecessor(*_ptr);
+				if (succ)
+					_ptr = succ->data;
+				else
+					_ptr = NULL;
+				return *this;
+			}
+			bidirectional_iterator & operator++(int) {
+				bidirectional_iterator	tmp = *this;
+				++(*this);
+				return tmp;
+			}
+			bidirectional_iterator & operator--(int) {
+				bidirectional_iterator	tmp = *this;
+				--(*this);
+				return tmp;
+			}
+	};
 }
 
 #endif

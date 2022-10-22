@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 12:54:29 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/21 18:52:31 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/22 18:10:44 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,14 @@ namespace ft {
 			return node;
 		}
 
+		Node<T, Alloc>* insert(T key) {
+			root = insert(root, key);
+			return root;
+		}
+
 		Node<T, Alloc>* insert(Node<T, Alloc>* node, const T& key) {
 			if (!node)
-				return (Node<T, Alloc>(key));
+				return (&Node<T, Alloc>(key));
 			if (compare(key.first, node->data->first)) {
 				node->left = insert(node->left, key);
 				node->left->parent = node;
@@ -172,7 +177,14 @@ namespace ft {
 				current = current->right;
 			return current;
 		}
-	
+		
+		bool deleteNode(T key) {
+			if (search(root, key)) {
+				root = deleteNode(root, key);
+				return true;
+			}
+			return false;
+		}
 		Node<T, Alloc>* deleteNode(Node<T, Alloc>* node, const T& key) {
 			if (node == NULL)
 				return NULL;
@@ -239,6 +251,14 @@ namespace ft {
 				succ = node->parent;
 			}
 			return succ;
+		}
+		void clone(const Node<T, Alloc> *node) {
+			if (!node)
+				return ;
+			clone(node->left);
+			if (node->data)
+				insert(*(node->data));
+			clone(node->right);
 		}
 	};
 }
