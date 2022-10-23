@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 12:54:29 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/22 18:10:44 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/23 18:16:20 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ namespace ft {
 
 	template <typename T, class Alloc = std::allocator<T> > class Node {
 		public:
-			T		*data;
-			Node	*parent;
-			Node	*left;
-			Node	*right;
+			T		data;
+			Node*	parent;
+			Node*	left;
+			Node*	right;
 			int		height;
-			Alloc	_alloc;
+			// Alloc	alloc;
 
 			Node() {
 				left = NULL;
@@ -37,34 +37,37 @@ namespace ft {
 				left = NULL;
 				right = NULL;
 				parent = NULL;
-				data = _alloc.allocate(1);
-				_alloc.construct(data, val);
+				// data = alloc.allocate(1);
+				// alloc.construct(data, val);
+				data = val;
 				height = 1;
 			}
 			Node &operator=(Node const &src) {
-				if(data)
-					_alloc.deallocate(data, 1);
+				// if(data)
+					// alloc.deallocate(data, 1);
 				left = src.left;
 				right = src.right;
 				parent = src.parent;
 				height = src.height;
-				data = _alloc.allocate(1);
-				_alloc.construct(data, *src.data);
+				// data = alloc.allocate(1);
+				// alloc. construct(data, *src.data);
+				data = src.data;
 				return (*this);
 			}
 			~Node() {
-				if (data) {
-					_alloc.destroy(data);
-					_alloc.deallocate(data, 1);
-				}
+				// if (data) {
+				// 	alloc.destroy(data);
+				// 	alloc.deallocate(data, 1);
+				// }
 			}
 	};
 
 	template <typename T, class Comp = std::less<T> , class Alloc = std::allocator<T> > class Tree {
 		public:
-			Node<T, Alloc>	*root;
-			Comp			compare;
-			Alloc			_alloc;
+		Node<T, Alloc>											*root;
+		Comp													compare;
+		Alloc													_alloc;
+		typename Alloc::template rebind<Node<T, Alloc> >::other	n_alloc;
 
 		Tree(): root(NULL) {}
 		Tree(const Tree &src) {
@@ -114,7 +117,7 @@ namespace ft {
 		Node<T, Alloc>* rebalance(Node<T, Alloc>* node, const T& key) {
 			int Balance = getBalance(node);
 			if (Balance > 1) {
-				if (compare(key.first, node->left->data->first))
+				if (compare(key.first, node->left->data.first))
 					return rightRotate(node);
 				else {
 					node->left = leftRotate(node->left);
@@ -122,7 +125,7 @@ namespace ft {
 				}
 			}
 			if (Balance < -1) {
-				if (compare(node->right->data->first, key.first))
+				if (compare(node->right->data.first, key.first))
 					return leftRotate(node);
 				else {
 					node->right = rightRotate(node->right);
@@ -137,14 +140,21 @@ namespace ft {
 			return root;
 		}
 
+		Node<T, Alloc> *newNode(T const &key) {
+			Node<T, Alloc>* node = n_alloc.allocate(1);
+			// node->data = _alloc.allocate(1);
+			// _alloc.construct(node->data, key);
+			n_alloc.construct(node, key);
+			return (node);
+		}
 		Node<T, Alloc>* insert(Node<T, Alloc>* node, const T& key) {
 			if (!node)
-				return (&Node<T, Alloc>(key));
-			if (compare(key.first, node->data->first)) {
+				return (newNode(key));
+			if (compare(key.first, node->data.first)) {
 				node->left = insert(node->left, key);
 				node->left->parent = node;
 			}
-			else if (compare(node->data->first, key.first)) {
+			else if (compare(node->data.first, key.first)) {
 				node->right = insert(node->right, key);
 				node->right->parent = node;
 			}
@@ -157,9 +167,9 @@ namespace ft {
 		void preOrder(Node<T, Alloc> *node) {
 			if(node != NULL) {
 				preOrder(node->left);
+				// _alloc.deallocate(node->data, 1);
 				preOrder(node->right);
-				_alloc.destroy(node->data);
-				_alloc.deallocate(node->data, 1);
+				n_alloc.deallocate(node, 1);
 				node = NULL;
 			}
 		}
@@ -188,9 +198,9 @@ namespace ft {
 		Node<T, Alloc>* deleteNode(Node<T, Alloc>* node, const T& key) {
 			if (node == NULL)
 				return NULL;
-			if (compare(key.first ,node->data->first))
+			if (compare(key.first ,node->data.first))
 				node->left = deleteNode(node->left, key);
-			else if(compare(node->data->first, key.first))
+			else if(compare(node->data.first, key.first))
 				node->right = deleteNode(node->right, key);
 			else {
 				if(node->left == NULL || node->right == NULL) {
@@ -201,8 +211,10 @@ namespace ft {
 					}
 					else
 						*node = *temp;
-					_alloc.destroy(temp->data);
+					// _alloc.destroy(temp->data);
+					// n_alloc.destroy(temp);
 					_alloc.deallocate(temp->data, 1);
+					n_alloc.deallocate(temp, 1);
 				}
 				else {
 					Node<T, Alloc>* temp = minNode(node->right);
@@ -218,11 +230,11 @@ namespace ft {
 		Node<T, Alloc>* search(Node<T, Alloc>* node, const T& key) const {
 			if (node == NULL)
 				return NULL;
-			if (node->data && node->data->first == key.first)
+			if (node->data.first == key.first)
 				return (node);
-			if (compare(key.first, node->data->first))
+			if (compare(key.first, node->data.first))
 				return (search(node->left, key));
-			else if (compare(node->data->first, key.first))
+			else if (compare(node->data.first, key.first))
 				return (search(node->right, key));
 			return (node);
 		}

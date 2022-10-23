@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:35:47 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/22 18:34:18 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/23 18:46:59 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,20 @@
 #include <map>
 #include <algorithm>
 
-// std::pair<int,int> make(int i , int h){
-// 	return std::pair<int, int>(i,h);
-// }
-
 int	main(void) {
 
-	// int tab[10] = {2,5,7,9,-6,55,4,0,33,10};
-	// int tab2[10] = {-92,587,17,-332,-11,5,444,7,963,-190};
+	ft::map<char, int>	map;
+	map['r'] = 10;
+	std::cout << map.at('r') << std::endl;
+	std::cout << map.empty() << std::endl;
+	std::cout << map.size() << std::endl;
+	std::cout << map.max_size() << std::endl;
+	map.clear();
+	std::cout << map.empty() << std::endl;
+	map['a'] = 20;
+	std::cout << map.count('a') << std::endl;
+	// map.insert(ft::make_pair('a', 12));
+	// ft::map<char, int>::iterator	it = map.begin();
 
-	// ft::Tree<std::pair<int, int> >	avl;
-	// ft::Node<std::pair<int, int> > *node = NULL;
-	// avl.insert(make(10, 20));
-	// for (int i = 0 ; i < 10; i++)
-	// 	avl.insert(node, make(tab[i], tab2[i]));
-	// avl.preOrder(node);
 	return 0;
 }

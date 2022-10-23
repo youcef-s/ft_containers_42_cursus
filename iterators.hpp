@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/22 12:55:44 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/23 18:14:32 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace ft {
 	};
 	template <class T> class iterator_traits<T *> {
 		public:
-			typedef ptrdiff_t						diffrence_type;
+			typedef std::ptrdiff_t					diffrence_type;
 			typedef T								value_type;
 			typedef T*								pointer;
 			typedef T&								reference;
@@ -36,7 +36,7 @@ namespace ft {
 	};
 	template <class T> class iterator_traits<const T *> {
 		public:
-			typedef ptrdiff_t						diffrence_type;
+			typedef std::ptrdiff_t					diffrence_type;
 			typedef T								value_type;
 			typedef const T*						pointer;
 			typedef const T&						reference;
@@ -52,7 +52,7 @@ namespace ft {
 			typedef std::random_access_iterator_tag				iterator_category;
 			typedef T*											pointer;
 			typedef T&											reference;
-			typedef ptrdiff_t									difference_type;
+			typedef std::ptrdiff_t								difference_type;
 
 			random_access_iterator() : _ptr(0) {}
 			random_access_iterator(pointer ptr) : _ptr(ptr) {}
@@ -190,7 +190,7 @@ namespace ft {
 			typedef std::bidirectional_iterator_tag				iterator_category;
 			typedef T*											pointer;
 			typedef T&											reference;
-			typedef ptrdiff_t									difference_type;
+			typedef std::ptrdiff_t								difference_type;
 
 			bidirectional_iterator() : _ptr(NULL) , _avl(NULL) {}
 			bidirectional_iterator(pointer ptr, Tree<T, Comp, Alloc>* avl) : _ptr(ptr), _avl(avl) {}

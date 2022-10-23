@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/16 16:05:02 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/23 17:15:28 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft {
 			typedef ft::random_access_iterator<const value_type>	const_iterator;
 			typedef ft::reverse_iterator<iterator>					reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
-			typedef ptrdiff_t										difference_type;
+			typedef std::ptrdiff_t									difference_type;
 			typedef std::size_t										size_type;
 
 			/********************  Member functions ********************/
