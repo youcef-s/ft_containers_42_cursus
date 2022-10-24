@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/23 18:38:29 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/24 18:48:17 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,9 @@ namespace ft {
 			map (const map& x) {_size = 0; *this = x;}
 			map& operator=( const map& other ) {
 				clear();
-				_avl.clone(other._avl);
+				_avl.clone(other._avl.root);
 				_size = other.size();
+				return *this;
 			}
 			~map() {clear();}
 			allocator_type get_allocator() const {return _alloc;}
@@ -85,18 +86,19 @@ namespace ft {
 			}
 			const T& at( const Key& key ) const {return static_cast<const T&>(at(key));}
 			T& operator[]( const Key& key ) {
-				Node<value_type, Allocator>*	node = _avl.search(_avl.root, make_pair(key, mapped_type()));
+				value_type	p = ft::make_pair<const Key_type, mapped_type>(key, mapped_type());
+				Node<value_type, Allocator>* node = _avl.search(_avl.root, p);
 				if (!node) {
-					node = _avl.insert(make_pair(key, mapped_type()));
+					node = _avl.insert(p);
 					_size++;
-					return node->data.second;
+					return (_avl.search(_avl.root, p))->data.second;
 				}
 				return node->data.second;
 			}
 			/******************** Iterators ********************/
-			iterator begin() {return iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root)->data : NULL, _avl);}
-			const_iterator begin() const {return const_iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root).data : NULL, _avl);}
-			iterator end() {return iterator(NULL, _avl);}
+			iterator begin() {return iterator(_avl.minNode(_avl.root) ? &_avl.minNode(_avl.root)->data : NULL, &_avl);}
+			const_iterator begin() const {return const_iterator(_avl.minNode(_avl.root) ? &_avl.minNode(_avl.root).data : NULL, &_avl);}
+			iterator end() {return iterator(NULL, &_avl);}
 			const_iterator end() const {return const_iterator(NULL, _avl);}
 			reverse_iterator rbegin() {return reverse_iterator(end());}
 			const_reverse_iterator rbegin() const {return const_reverse_iterator(end());}
@@ -120,7 +122,7 @@ namespace ft {
 					_avl.insert(value);
 					_size++;
 				}
-				return ft::pair<iterator, bool>(iterator(node->data, &_avl), nodeNotFound);
+				return ft::pair<iterator, bool>(iterator(&node->data, &_avl), nodeNotFound);
 			}
 			iterator insert( iterator pos, const value_type& value ) {
 				(void) pos;
@@ -130,17 +132,20 @@ namespace ft {
 				for(; first != last; ++first)
 					insert(*first);
 			}
-			iterator erase( iterator pos ) {
-				_avl.deleteNode(*pos);
-				_size--;
+			void erase( iterator pos ) {
+				if(_avl.deleteNode(*pos))
+					_size--;
 			}
-			iterator erase( iterator first, iterator last ) {
-				for (; first != last; ++first)
+			void erase( iterator first, iterator last ) {
+				size_type size = std::distance(first, last);
+				for (; _size != _size - size; ++first)
 					erase(first);
 			}
 			size_type erase( const Key& key ) {
-				_size--;
-				return _avl.deleteNode(ft::make_pair(key, mapped_type()));
+				size_type n = _avl.deleteNode(ft::make_pair(key, mapped_type()));
+				if (n)
+					_size--;
+				return n;
 			}
 			void swap( map& other ) {
 				map	tmp = other;

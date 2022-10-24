@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/23 18:14:32 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/24 18:36:36 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ namespace ft {
 				_ptr -= n;
 				return *this;
 			}
-			reference &operator[](int n) {return _ptr[n];}
+			reference operator[](int n) {return _ptr[n];}
 			operator random_access_iterator<const T> () const {
 				return (random_access_iterator<const T>(_ptr));
 			}
@@ -211,35 +211,39 @@ namespace ft {
 			pointer operator->() {return &(operator*());}
 			bidirectional_iterator & operator++() {
 				Node<T, Alloc>*	node = _avl->search(_avl->root, *_ptr);
-				if (!node)
-					return NULL;
-				Node<T, Alloc>*	succ = _avl->successor(*_ptr);
-				if (succ)
-					_ptr = succ->data;
-				else
-					_ptr = NULL;
+				if (node) {
+					Node<T, Alloc>*	succ = _avl->successor(*_ptr);
+					if (succ)
+						_ptr = &succ->data;
+					else
+						_ptr = NULL;	
+				}
 				return *this;
 			}
 			bidirectional_iterator & operator--() {
 				Node<T, Alloc>*	node = _avl->search(_avl->root, *_ptr);
-				if (!node)
-					return NULL;
-				Node<T, Alloc>*	succ = _avl->predecessor(*_ptr);
-				if (succ)
-					_ptr = succ->data;
-				else
-					_ptr = NULL;
+				if (node) {
+					Node<T, Alloc>*	succ = _avl->predecessor(*_ptr);
+					if (succ)
+						_ptr = &succ->data;
+					else
+						_ptr = NULL;
+				}
 				return *this;
 			}
-			bidirectional_iterator & operator++(int) {
+			bidirectional_iterator operator++(int) {
 				bidirectional_iterator	tmp = *this;
 				++(*this);
 				return tmp;
 			}
-			bidirectional_iterator & operator--(int) {
+			bidirectional_iterator operator--(int) {
 				bidirectional_iterator	tmp = *this;
 				--(*this);
 				return tmp;
+			}
+			operator bidirectional_iterator<const T, Comp, Alloc> () const {
+				return bidirectional_iterator<const T, Comp, Alloc>
+				(_ptr, reinterpret_cast<const Tree<const value_type, Comp, Alloc>*>(_avl));
 			}
 	};
 }

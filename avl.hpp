@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 12:54:29 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/23 18:16:20 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/24 18:37:08 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,9 @@ namespace ft {
 
 		Node<T, Alloc> *rightRotate(Node<T, Alloc> *oldTop) {
 			Node<T, Alloc> *newTop = oldTop->left;
+			if (!newTop) return oldTop;
 			Node<T, Alloc> *tmpR = newTop->right;
-
+			if (newTop->right) newTop->right->parent = oldTop;
 			newTop->right = oldTop;
 			oldTop->left = tmpR;
 			newTop->parent = oldTop->parent;
@@ -100,7 +101,7 @@ namespace ft {
 		Node<T, Alloc> *leftRotate(Node<T, Alloc> *oldTop) {
 			Node<T, Alloc> *newTop = oldTop->right;
 			Node<T, Alloc> *tmpL = newTop->left;
-
+			if (newTop->left) newTop->left->parent = oldTop;
 			newTop->left = oldTop;
 			oldTop->right = tmpL;
 			newTop->parent = oldTop->parent;
@@ -174,14 +175,14 @@ namespace ft {
 			}
 		}
 		
-		Node<T, Alloc>* minNode(Node<T, Alloc>* node) {
+		Node<T, Alloc>* minNode(Node<T, Alloc>* node) const {
 			Node<T, Alloc>* current = node;
 			while (current->left)
 				current = current->left;
 			return current;
 		}
 
-		Node<T, Alloc>* maxNode(Node<T, Alloc>* node) {
+		Node<T, Alloc>* maxNode(Node<T, Alloc>* node) const {
 			Node<T, Alloc>*	current = node;
 			while (current->right)
 				current = current->right;
@@ -195,6 +196,7 @@ namespace ft {
 			}
 			return false;
 		}
+
 		Node<T, Alloc>* deleteNode(Node<T, Alloc>* node, const T& key) {
 			if (node == NULL)
 				return NULL;
@@ -209,17 +211,18 @@ namespace ft {
 						temp = node;
 						node = NULL;
 					}
-					else
+					else {
+						Node<T, Alloc> *np = node->parent;
 						*node = *temp;
-					// _alloc.destroy(temp->data);
-					// n_alloc.destroy(temp);
-					_alloc.deallocate(temp->data, 1);
+						node->parent = np;
+					}
+					n_alloc.destroy(temp);
 					n_alloc.deallocate(temp, 1);
 				}
 				else {
-					Node<T, Alloc>* temp = minNode(node->right);
-					node->key = temp->key;
-					node->right = deleteNode(node->right, temp->key);
+					Node<T, Alloc> *tmp = minNode(node->right);
+					node->data = tmp->data;
+					node->right = deleteNode(node->right, tmp->data);
 				}
 			}
 			if (node == NULL)
@@ -258,7 +261,7 @@ namespace ft {
 			if (node->left)
 				return maxNode(node->left);
 			Node<T, Alloc>*	succ = node->parent;
-			while (succ && succ->rigth != node) {
+			while (succ && succ->right != node) {
 				node = succ;
 				succ = node->parent;
 			}
@@ -268,8 +271,8 @@ namespace ft {
 			if (!node)
 				return ;
 			clone(node->left);
-			if (node->data)
-				insert(*(node->data));
+			if (node->data.first)
+				insert(node->data);
 			clone(node->right);
 		}
 	};
