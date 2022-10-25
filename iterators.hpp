@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/24 18:36:36 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/25 20:22:46 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,13 @@ namespace ft {
 				return *this;
 			}
 			bidirectional_iterator & operator--() {
+				if (!_ptr) {
+					if (_avl->root->right)
+						_ptr = &_avl->minNode(_avl->root->right)->data;
+					else
+						_ptr = &_avl->root->data;
+					return *this;
+				}
 				Node<T, Alloc>*	node = _avl->search(_avl->root, *_ptr);
 				if (node) {
 					Node<T, Alloc>*	succ = _avl->predecessor(*_ptr);
@@ -243,7 +250,7 @@ namespace ft {
 			}
 			operator bidirectional_iterator<const T, Comp, Alloc> () const {
 				return bidirectional_iterator<const T, Comp, Alloc>
-				(_ptr, reinterpret_cast<const Tree<const value_type, Comp, Alloc>*>(_avl));
+				(_ptr, reinterpret_cast<Tree<const value_type, Comp, Alloc>*>(_avl));
 			}
 	};
 }

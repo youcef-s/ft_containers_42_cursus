@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/23 17:15:28 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/25 18:30:10 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,11 @@ namespace ft {
 			}
 			template< class InputIt > void assign( InputIt first, InputIt last,
 			typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = NULL) {
-				difference_type dist = static_cast<size_type>(std::distance(first, last));
+				size_type dist = static_cast<size_type>(std::distance(first, last));
 				clear();
 				reserve(dist);
 				for (;first != last; ++first)
 						push_back(*first);
-				_size = dist;
 			}
 			/******************** Iterators ********************/
 			iterator begin() {return iterator(_ptr);}
@@ -141,16 +140,15 @@ namespace ft {
 
 				tmp.assign(position, end());
 				_size = static_cast<size_type>(std::distance(begin(), position));
+				size_type tmpsize = _size;
 				push_back(val);
 				for (size_type i = 0; i < tmp.size(); ++i)
 					push_back(tmp[i]);
-				return (position);
+				return (begin() + tmpsize);
 			}
 			void insert (iterator position, size_type n, const value_type& val) {
 				vector<value_type>	tmp;
-
 				tmp.assign(position, end());
-				_size = static_cast<size_type>(std::distance(begin(), position));
 				for (size_type i = 0;i < n; ++i)
 					push_back(val);
 				for(size_type i = 0; i < tmp.size(); ++i)
@@ -159,7 +157,6 @@ namespace ft {
 			template <class InputIterator> void insert (iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 				vector<value_type>	tmp;
-				
 				tmp.assign(position, end());
 				_size = static_cast<size_type>(std::distance(begin(), position));
 				for (; first != last; ++first)

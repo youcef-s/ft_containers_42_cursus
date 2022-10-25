@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 12:54:29 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/24 18:37:08 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/25 16:26:32 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,42 +24,31 @@ namespace ft {
 			Node*	left;
 			Node*	right;
 			int		height;
-			// Alloc	alloc;
 
 			Node() {
 				left = NULL;
 				right = NULL;
 				parent = NULL;
-				data = NULL;
+				data.first = 0;
+				data.second = 0;
 				height = 0;
 			}
 			Node(const T &val) {
 				left = NULL;
 				right = NULL;
 				parent = NULL;
-				// data = alloc.allocate(1);
-				// alloc.construct(data, val);
 				data = val;
 				height = 1;
 			}
 			Node &operator=(Node const &src) {
-				// if(data)
-					// alloc.deallocate(data, 1);
 				left = src.left;
 				right = src.right;
 				parent = src.parent;
 				height = src.height;
-				// data = alloc.allocate(1);
-				// alloc. construct(data, *src.data);
 				data = src.data;
 				return (*this);
 			}
-			~Node() {
-				// if (data) {
-				// 	alloc.destroy(data);
-				// 	alloc.deallocate(data, 1);
-				// }
-			}
+			~Node() {}
 	};
 
 	template <typename T, class Comp = std::less<T> , class Alloc = std::allocator<T> > class Tree {
@@ -143,8 +132,6 @@ namespace ft {
 
 		Node<T, Alloc> *newNode(T const &key) {
 			Node<T, Alloc>* node = n_alloc.allocate(1);
-			// node->data = _alloc.allocate(1);
-			// _alloc.construct(node->data, key);
 			n_alloc.construct(node, key);
 			return (node);
 		}
@@ -168,7 +155,6 @@ namespace ft {
 		void preOrder(Node<T, Alloc> *node) {
 			if(node != NULL) {
 				preOrder(node->left);
-				// _alloc.deallocate(node->data, 1);
 				preOrder(node->right);
 				n_alloc.deallocate(node, 1);
 				node = NULL;

@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:35:47 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/24 18:45:38 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/25 20:22:24 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,23 @@
 #include <map>
 #include <algorithm>
 
+using ft::map;
+
+/* There is still a problem with ft::map<T1, T2>::reverse_iterator */
+
 int	main(void) {
 
-	ft::map<char, int>	map;
-	map['r'] = 10;
-	map['b'] = 100;
-	map['k'] = 86;
-	map.insert(ft::make_pair('a', 12));
-	ft::map<char, int>::iterator	it = map.begin();
-	ft::map<char, int>::iterator	it2 = map.end();
-	// ft::map<char, int>::const_iterator	cit = map.begin();
-	ft::map<char, int>	map2(it, it2);
-	ft::map<char, int>	map3;
-	map3.insert(it, it2);
-	// map3.erase(map3.begin());
-	// map3.erase('a');
-	map3.erase(map3.begin(), map3.end());
-	std::cout << map3.size() << std::endl;
-	// map2.insert(ft::make_pair('c', 120));
-	// map.swap(map2);
-	// std::cout << map['c'] << std::endl;
+	map<char, int> var;
+	var['c'] = 202;
+	var['r'] = 0;
+	var['e'] = 20;
+	var['w'] = 2;
+	var['t'] = 12;
+	var['x'] = 120;
+
+	map<char, int>::reverse_iterator it = var.rbegin();
+	for(; it != var.rend(); ++it)
+		std::cout << it->first << " " << it->second << "\n";
+
 	return 0;
 }
