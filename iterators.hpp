@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/25 20:22:46 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/26 14:37:35 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ namespace ft {
 				if (node) {
 					Node<T, Alloc>*	succ = _avl->successor(*_ptr);
 					if (succ)
-						_ptr = &succ->data;
+						_ptr = succ->data;
 					else
 						_ptr = NULL;	
 				}
@@ -223,16 +223,16 @@ namespace ft {
 			bidirectional_iterator & operator--() {
 				if (!_ptr) {
 					if (_avl->root->right)
-						_ptr = &_avl->minNode(_avl->root->right)->data;
+						_ptr = _avl->maxNode(_avl->root->right)->data;
 					else
-						_ptr = &_avl->root->data;
+						_ptr = _avl->root->data;
 					return *this;
 				}
 				Node<T, Alloc>*	node = _avl->search(_avl->root, *_ptr);
 				if (node) {
 					Node<T, Alloc>*	succ = _avl->predecessor(*_ptr);
 					if (succ)
-						_ptr = &succ->data;
+						_ptr = succ->data;
 					else
 						_ptr = NULL;
 				}

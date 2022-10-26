@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/25 18:30:10 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:11:06 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,11 @@ namespace ft {
 			void insert (iterator position, size_type n, const value_type& val) {
 				vector<value_type>	tmp;
 				tmp.assign(position, end());
+				if (n + _capacity > _capacity * 2)
+					reserve(_size + n);
+				else if (!_size)
+					reserve(n);
+				_size = position - begin();
 				for (size_type i = 0;i < n; ++i)
 					push_back(val);
 				for(size_type i = 0; i < tmp.size(); ++i)

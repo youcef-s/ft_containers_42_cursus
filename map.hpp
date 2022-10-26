@@ -6,12 +6,13 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/25 20:09:24 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:32:29 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "iterators.hpp"
 #include "pair.hpp"
+#include "vector.hpp"
 
 namespace ft {
 
@@ -19,15 +20,15 @@ namespace ft {
 		class Allocator = std::allocator<ft::pair<const Key, T> > > class map {
 
 		public:
-			Tree<ft::pair<Key, T> , Compare, Allocator>		_avl;
-			Allocator										_alloc;
-			Compare											_cmp;
-			std::size_t										_size;
+			Tree<ft::pair<const Key, T> , Compare, Allocator>		_avl;
+			Allocator												_alloc;
+			Compare													_cmp;
+			std::size_t												_size;
 		
 		public:
 			typedef Key																			key_type;
 			typedef T																			mapped_type;
-			typedef ft::pair<key_type, mapped_type>												value_type;
+			typedef ft::pair<const key_type, mapped_type>												value_type;
 			typedef std::size_t																	size_type;
 			typedef std::ptrdiff_t																difference_type;
 			typedef Compare																		key_compare;
@@ -81,26 +82,32 @@ namespace ft {
 			T& at( const Key& key ) {
 				Node<value_type, Allocator>*	node = _avl.search(_avl.root, make_pair(key, mapped_type()));
 				if (node)
-					return node->data.second;
+					return node->data->second;
 				else
 					throw std::out_of_range("Element not found");
 			}
-			const T& at( const Key& key ) const {return static_cast<const T&>(at(key));}
+			const T& at( const Key& key ) const {
+				Node<value_type, Allocator>*	node = _avl.search(_avl.root, make_pair(key, mapped_type()));
+				if (node)
+					return node->data->second;
+				else
+					throw std::out_of_range("Element not found");
+			}
 			T& operator[]( const Key& key ) {
 				value_type	p = ft::make_pair<const key_type, mapped_type>(key, mapped_type());
 				Node<value_type, Allocator>* node = _avl.search(_avl.root, p);
 				if (!node) {
 					node = _avl.insert(p);
 					_size++;
-					return (_avl.search(_avl.root, p))->data.second;
+					return (_avl.search(_avl.root, p))->data->second;
 				}
-				return node->data.second;
+				return node->data->second;
 			}
 			/******************** Iterators ********************/
-			iterator begin() {return iterator(_avl.minNode(_avl.root) ? &_avl.minNode(_avl.root)->data : NULL, &_avl);}
-			const_iterator begin() const {return const_iterator(_avl.minNode(_avl.root) ? &_avl.minNode(_avl.root).data : NULL, &_avl);}
+			iterator begin() {return iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root)->data : NULL, &_avl);}
+			const_iterator begin() const {return const_iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root).data : NULL, &_avl);}
 			iterator end() {return iterator(NULL, &_avl);}
-			const_iterator end() const {return const_iterator(NULL, _avl);}
+			const_iterator end() const {return const_iterator(NULL, &_avl);}
 			reverse_iterator rbegin() {return reverse_iterator(end());}
 			const_reverse_iterator rbegin() const {return const_reverse_iterator(end());}
 			reverse_iterator rend() {return reverse_iterator(begin());}
@@ -120,10 +127,10 @@ namespace ft {
 				bool nodeNotFound = false;
 				if (!node) {
 					nodeNotFound = true;
-					_avl.insert(value);
+					node = _avl.insert(value);
 					_size++;
 				}
-				return ft::pair<iterator, bool>(iterator(&node->data, &_avl), nodeNotFound);
+				return ft::pair<iterator, bool>(iterator(node->data, &_avl), nodeNotFound);
 			}
 			iterator insert( iterator pos, const value_type& value ) {
 				(void) pos;
@@ -162,7 +169,7 @@ namespace ft {
 			}
 			iterator find( const Key& key ) {
 				Node<value_type, Allocator>* node = _avl.search(_avl.root, ft::make_pair(key, mapped_type()));
-				return node ? iterator(&node->data, &_avl) : iterator(NULL, &_avl);
+				return node ? iterator(node->data, &_avl) : iterator(NULL, &_avl);
 			}
 			const_iterator find( const Key& key ) const {
 				Node<value_type, Allocator>* node = _avl.search(_avl.root, ft::make_pair(key, mapped_type()));
@@ -173,56 +180,56 @@ namespace ft {
 				Node<value_type, Allocator>* res = _avl.root;
 
 				while (rootTmp) {
-					if (!_cmp(rootTmp->data.first, key)) {
+					if (!_cmp(rootTmp->data->first, key)) {
 						res = rootTmp;
 						rootTmp = rootTmp->left;
 					}
 					else
 						rootTmp = rootTmp->right;
 				}
-				return res ? iterator(&res->data, &_avl) : iterator(NULL, &_avl);
+				return res ? iterator(res->data, &_avl) : iterator(NULL, &_avl);
 			}
 			const_iterator lower_bound( const Key& key ) const {
 				Node<value_type, Allocator>*	rootTmp = _avl.root;	
 				Node<value_type, Allocator>*	res = _avl.root;
 
 				while (rootTmp) {
-					if (!_cmp(rootTmp->data.first, key)) {
+					if (!_cmp(rootTmp->data->first, key)) {
 						res = rootTmp;
 						rootTmp = rootTmp->left;
 					}
 					else
 						rootTmp = rootTmp->right;
 				}
-				return res ? const_iterator(&res->data, &_avl) : const_iterator(NULL, &_avl);
+				return res ? const_iterator(res->data, &_avl) : const_iterator(NULL, &_avl);
 			}
 			iterator upper_bound( const Key& key ) {
 				Node<value_type, Allocator>*	rootTmp = _avl.root;	
 				Node<value_type, Allocator>*	res = _avl.root;
 
 				while (rootTmp) {
-					if (_cmp(key, rootTmp->data.first)) {
+					if (_cmp(key, rootTmp->data->first)) {
 						res = rootTmp;
 						rootTmp = rootTmp->left;
 					}
 					else
 						rootTmp = rootTmp->right;
 				}
-				return res ? iterator(&res->data, &_avl) : iterator(NULL, &_avl);
+				return res ? iterator(res->data, &_avl) : iterator(NULL, &_avl);
 			}
 			const_iterator upper_bound( const Key& key ) const {
 				Node<value_type, Allocator>*	rootTmp = _avl.root;	
 				Node<value_type, Allocator>*	res = _avl.root;
 
 				while (rootTmp) {
-					if (key, _cmp(rootTmp->data.first)) {
+					if (key, _cmp(rootTmp->data->first)) {
 						res = rootTmp;
 						rootTmp = rootTmp->left;
 					}
 					else
 						rootTmp = rootTmp->right;
 				}
-				return res ? const_iterator(&res->data, &_avl) : const_iterator(NULL, &_avl);
+				return res ? const_iterator(res->data, &_avl) : const_iterator(NULL, &_avl);
 			}
 			ft::pair<iterator,iterator> equal_range( const Key& key ) {
 				return ft::make_pair(lower_bound(key), upper_bound(key));

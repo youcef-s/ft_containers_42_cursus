@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 16:06:38 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/13 18:49:59 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/26 15:57:05 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ namespace ft {
 	template <class T> struct is_integral : integral_constant<bool, false>{};
 	template <> struct is_integral<bool> : integral_constant<bool, true>{};
 	template <> struct is_integral<char> : integral_constant<bool, true>{};
-	template <> struct is_integral<char16_t> : integral_constant<bool, true>{};
-	template <> struct is_integral<char32_t> : integral_constant<bool, true>{};
 	template <> struct is_integral<wchar_t> : integral_constant<bool, true>{};
 	template <> struct is_integral<signed char> : integral_constant<bool, true>{};
 	template <> struct is_integral<short int> : integral_constant<bool, true>{};
