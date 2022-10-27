@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/26 16:32:29 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/27 18:50:59 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace ft {
 		public:
 			typedef Key																			key_type;
 			typedef T																			mapped_type;
-			typedef ft::pair<const key_type, mapped_type>												value_type;
+			typedef ft::pair<const key_type, mapped_type>										value_type;
 			typedef std::size_t																	size_type;
 			typedef std::ptrdiff_t																difference_type;
 			typedef Compare																		key_compare;
@@ -80,14 +80,14 @@ namespace ft {
 			allocator_type get_allocator() const {return _alloc;}
 			/******************** Element access ********************/
 			T& at( const Key& key ) {
-				Node<value_type, Allocator>*	node = _avl.search(_avl.root, make_pair(key, mapped_type()));
+				Node<value_type, Allocator>*	node = _avl.search(_avl.root, ft::make_pair(key, mapped_type()));
 				if (node)
 					return node->data->second;
 				else
 					throw std::out_of_range("Element not found");
 			}
 			const T& at( const Key& key ) const {
-				Node<value_type, Allocator>*	node = _avl.search(_avl.root, make_pair(key, mapped_type()));
+				Node<value_type, Allocator>*	node = _avl.search(_avl.root, ft::make_pair(key, mapped_type()));
 				if (node)
 					return node->data->second;
 				else
@@ -105,7 +105,7 @@ namespace ft {
 			}
 			/******************** Iterators ********************/
 			iterator begin() {return iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root)->data : NULL, &_avl);}
-			const_iterator begin() const {return const_iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root).data : NULL, &_avl);}
+			const_iterator begin() const {return const_iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root)->data : NULL, &_avl);}
 			iterator end() {return iterator(NULL, &_avl);}
 			const_iterator end() const {return const_iterator(NULL, &_avl);}
 			reverse_iterator rbegin() {return reverse_iterator(end());}
@@ -250,8 +250,8 @@ namespace ft {
 	bool operator==( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs ) {
 		if (lhs.size() != rhs.size())
 			return false;
-		typename ft::map<Key, T, Compare, Alloc>::iterator	lit = lhs.begin();
-		typename ft::map<Key, T, Compare, Alloc>::iterator	rit = rhs.begin();
+		typename ft::map<Key, T, Compare, Alloc>::const_iterator	lit = lhs.begin();
+		typename ft::map<Key, T, Compare, Alloc>::const_iterator	rit = rhs.begin();
 		for (; lit != lhs.end(); ++lit, ++rit){
 			if (*lit != *rit)
 				return false;
@@ -264,11 +264,11 @@ namespace ft {
 	}
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs ) {
-		return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	}
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator>( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs ) {
-		return lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
+		return ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
 	}
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator<=( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs ) {

@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:09:35 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/26 14:37:35 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/27 18:48:51 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,8 +183,8 @@ namespace ft {
 	/********************  Bidirectional iterator ********************/
 	template<typename T, typename Comp, typename Alloc> class bidirectional_iterator {
 		private:
-			T*						_ptr;
-			Tree<T, Comp , Alloc >*	_avl;
+			T*								_ptr;
+			const Tree<T, Comp , Alloc >*	_avl;
 		public:
 			typedef T											value_type;
 			typedef std::bidirectional_iterator_tag				iterator_category;
@@ -193,7 +193,7 @@ namespace ft {
 			typedef std::ptrdiff_t								difference_type;
 
 			bidirectional_iterator() : _ptr(NULL) , _avl(NULL) {}
-			bidirectional_iterator(pointer ptr, Tree<T, Comp, Alloc>* avl) : _ptr(ptr), _avl(avl) {}
+			bidirectional_iterator(pointer ptr,const Tree<T, Comp, Alloc>* avl = NULL) : _ptr(ptr), _avl(avl) {}
 			bidirectional_iterator(const bidirectional_iterator & copy) : _ptr(copy._ptr), _avl(copy._avl) {}
 			bidirectional_iterator & operator=(const bidirectional_iterator & assign) {
 				_ptr = assign._ptr;
@@ -207,8 +207,8 @@ namespace ft {
 			bool operator!=(const bidirectional_iterator & it) {
 				return _ptr != it._ptr;
 			}
-			reference operator*() {return *_ptr;}
-			pointer operator->() {return &(operator*());}
+			reference operator*() const {return *_ptr;}
+			pointer operator->() const {return &(operator*());}
 			bidirectional_iterator & operator++() {
 				Node<T, Alloc>*	node = _avl->search(_avl->root, *_ptr);
 				if (node) {
@@ -249,8 +249,8 @@ namespace ft {
 				return tmp;
 			}
 			operator bidirectional_iterator<const T, Comp, Alloc> () const {
-				return bidirectional_iterator<const T, Comp, Alloc>
-				(_ptr, reinterpret_cast<Tree<const value_type, Comp, Alloc>*>(_avl));
+				return bidirectional_iterator<const T, Comp, Alloc>(_ptr,
+				reinterpret_cast<const Tree<const value_type, Comp, Alloc>*>(_avl));
 			}
 	};
 }

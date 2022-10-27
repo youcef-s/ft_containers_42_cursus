@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:44:42 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/26 19:37:03 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/27 18:19:45 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,92 @@ int	main(void) {
 		cout << "\n";
 	}
 
+	cout << "\033[0;32m** assign **\033[0m\n";
+	{
+		vector<int>	vect;
+		vector<int>	vect2;
+		vect.assign(5, 12);
+		vect2.assign(vect.begin(), vect.end() - 2);
+		
+		cout << "The contents of the vector are: ";
+		for (size_t i = 0; i < vect2.size(); ++i)
+			cout << vect2[i] << ' ';
+		cout << '\n';
+	}
+
+	cout << "\033[0;32m** get_allocator **\033[0m\n";
+	{
+		vector<int> vect;
+		int*		ptr;
+
+		ptr = vect.get_allocator().allocate(5);
+
+		for (size_t i = 0; i < 5; ++i)
+			vect.get_allocator().construct(&ptr[i],i);
+
+		cout << "The allocated array contains:";
+		for (size_t i = 0; i < 5; ++i)
+			cout << ' ' << ptr[i];
+		cout << "\n";
+
+		for (size_t i = 0; i < 5; ++i)
+			vect.get_allocator().destroy(&ptr[i]);
+		vect.get_allocator().deallocate(ptr,5);
+	}
+
+	cout << "\033[0;32m** at **\033[0m\n";
+	{
+		vector<int> vect(10);
+
+		for (size_t i = 0; i < vect.size(); ++i)
+			vect.at(i) = i;
+
+		cout << "the vector contains:";
+		for (size_t i = 0; i < vect.size(); ++i)
+			cout << ' ' << vect.at(i);
+		cout << "\n";
+	}
+	
+	cout << "\033[0;32m** operator[] **\033[0m\n";
+	{
+		vector<int> vect (10);
+
+		for (size_t i = 0; i < vect.size(); ++i)
+			vect[i] = i;
+
+		cout << "the vector contains:";
+		for (size_t i = 0; i < vect.size(); ++i)
+			cout << ' ' << vect[i];
+		cout << "\n";
+	}
+
+	cout << "\033[0;32m** front **\033[0m\n";
+	{
+		vector<int> vect;
+
+		vect.push_back(8);
+		vect.push_back(6);
+		cout << "the front of the vector is " << vect.front() << '\n';
+	}
+
+	cout << "\033[0;32m** back **\033[0m\n";
+	{
+		vector<int> vect;
+		vect.push_back(10);
+		vect.push_back(12);
+		cout << "the back of the vector is " << vect.back() << '\n';
+	}
+	
+	cout << "\033[0;32m** data **\033[0m\n";
+	{
+		vector<int>	vect(3, 10);
+		
+		cout << "the vector contains:";
+		for (size_t i = 0; i < vect.size(); ++i)
+			cout << ' ' << vect.data()[i];
+		cout << '\n';
+	}
+
 	cout << "\033[0;32m** begin and end **\033[0m\n";
 	{
 		vector<int> vect;
@@ -63,6 +149,20 @@ int	main(void) {
 		cout << "the vector elements in erverse order:";
 		for (vector<int>::reverse_iterator it = vect.rbegin(); it != vect.rend(); ++it)
 			cout << ' ' << *it;
+		cout << "\n";
+	}
+
+	cout << "\033[0;32m** empty **\033[0m\n";
+	{
+		vector<int> vect;
+
+		cout << "before filling the vector, vect is empty: ";
+		cout << std::boolalpha << vect.empty();
+		cout << "\n";
+		for (int i = 0; i < 5; ++i)
+			vect.push_back(i);
+		cout << "after filling the vector, vect is empty: ";
+		cout << std::boolalpha << vect.empty();
 		cout << "\n";
 	}
 
@@ -91,23 +191,16 @@ int	main(void) {
 		cout << "max_size: " << vect.max_size() << "\n";
 	}
 
-	cout << "\033[0;32m** resize **\033[0m\n";
+	cout << "\033[0;32m** reserve **\033[0m\n";
 	{
-		vector<int> vect;
-
-		for (int i = 1; i < 10; ++i)
-			vect.push_back(i);
-
-		vect.resize(5);
-		vect.resize(8,100);
-		vect.resize(12);
-
-		cout << "the vector contains:";
-		for (size_t i = 0; i < vect.size(); ++i)
-			cout << ' ' << vect[i];
-		cout << "\n";
+		vector<int>	vect(10, 10);
+		cout << "capacity before reserving anything: " << vect.capacity() << "\n";
+		vect.reserve(20);
+		cout << "capacity after reserving 20 elements: " << vect.capacity() << "\n";
+		vect.reserve(5);
+		cout << "capacity after reserving 5 elements: " << vect.capacity() << "\n";
 	}
-	
+
 	cout << "\033[0;32m** capacity **\033[0m\n";
 	{
 		vector<int> vect;
@@ -119,99 +212,26 @@ int	main(void) {
 		}
 		cout << "\n";
 	}
-	
-	cout << "\033[0;32m** empty **\033[0m\n";
+
+	cout << "\033[0;32m** clear **\033[0m\n";
 	{
 		vector<int> vect;
-
-		cout << "before filling the vector, vect is empty: ";
-		cout << std::boolalpha << vect.empty();
-		cout << "\n";
-		for (int i = 0; i < 5; ++i)
-			vect.push_back(i);
-		cout << "after filling the vector, vect is empty: ";
-		cout << std::boolalpha << vect.empty();
-		cout << "\n";
-	}
-
-	cout << "\033[0;32m** reserve **\033[0m\n";
-	{
-		vector<int>	vect(10, 10);
-		cout << "capacity before reserving anything: " << vect.capacity() << "\n";
-		vect.reserve(20);
-		cout << "capacity after reserving 20 elements: " << vect.capacity() << "\n";
-		vect.reserve(5);
-		cout << "capacity after reserving 5 elements: " << vect.capacity() << "\n";
-	}
-
-	cout << "\033[0;32m** operator[] **\033[0m\n";
-	{
-		vector<int> vect (10);
-
-		for (size_t i = 0; i < vect.size(); ++i)
-			vect[i] = i;
+		vect.push_back (10);
+		vect.push_back (20);
+		vect.push_back (30);
 
 		cout << "the vector contains:";
 		for (size_t i = 0; i < vect.size(); ++i)
 			cout << ' ' << vect[i];
 		cout << "\n";
-	}
-	
-	cout << "\033[0;32m** at **\033[0m\n";
-	{
-		vector<int> vect(10);
 
+		vect.clear();
+		vect.push_back (3);
+		vect.push_back (17);
+
+		cout << "the vector now contains:";
 		for (size_t i = 0; i < vect.size(); ++i)
-			vect.at(i) = i;
-
-		cout << "the vector contains:";
-		for (size_t i = 0; i < vect.size(); ++i)
-			cout << ' ' << vect.at(i);
-		cout << "\n";
-	}
-
-	cout << "\033[0;32m** front **\033[0m\n";
-	{
-		vector<int> vect;
-
-		vect.push_back(8);
-		vect.push_back(6);
-		cout << "the front of the vector is " << vect.front() << '\n';
-	}
-
-	cout << "\033[0;32m** back **\033[0m\n";
-	{
-		vector<int> vect;
-		vect.push_back(10);
-		vect.push_back(12);
-		cout << "the back of the vector is " << vect.back() << '\n';
-	}
-
-	cout << "\033[0;32m** push_back **\033[0m\n";
-	{
-		vector<int>	vect;
-		for(size_t i = 1; i < 10; ++i)
-			vect.push_back(i * 10);
-		cout << "the vector contains: ";
-		for(size_t i = 0; i < vect.size(); ++i)
-			cout << vect[i] << " ";
-		cout << "\n";
-	}
-	
-	cout << "\033[0;32m** pop_back **\033[0m\n";
-	{
-		vector<int> vect;
-	
-		for(size_t i = 0; i < 10; ++i)
-			vect.push_back(i);
-
-		vect.pop_back();	
-		vect.pop_back();	
-		vect.pop_back();
-		
-		cout << "the vector contains: ";
-		for (size_t i = 0; i < vect.size(); ++i)
-			cout << vect[i] << " ";
+			cout << ' ' << vect[i];
 		cout << "\n";
 	}
 
@@ -250,6 +270,51 @@ int	main(void) {
 		cout << "\n";
 	}
 
+	cout << "\033[0;32m** push_back **\033[0m\n";
+	{
+		vector<int>	vect;
+		for(size_t i = 1; i < 10; ++i)
+			vect.push_back(i * 10);
+		cout << "the vector contains: ";
+		for(size_t i = 0; i < vect.size(); ++i)
+			cout << vect[i] << " ";
+		cout << "\n";
+	}
+	
+	cout << "\033[0;32m** pop_back **\033[0m\n";
+	{
+		vector<int> vect;
+	
+		for(size_t i = 0; i < 10; ++i)
+			vect.push_back(i);
+
+		vect.pop_back();	
+		vect.pop_back();	
+		vect.pop_back();
+		
+		cout << "the vector contains: ";
+		for (size_t i = 0; i < vect.size(); ++i)
+			cout << vect[i] << " ";
+		cout << "\n";
+	}
+
+	cout << "\033[0;32m** resize **\033[0m\n";
+	{
+		vector<int> vect;
+
+		for (int i = 1; i < 10; ++i)
+			vect.push_back(i);
+
+		vect.resize(5);
+		vect.resize(8,100);
+		vect.resize(12);
+
+		cout << "the vector contains:";
+		for (size_t i = 0; i < vect.size(); ++i)
+			cout << ' ' << vect[i];
+		cout << "\n";
+	}
+
 	cout << "\033[0;32m** swap **\033[0m\n";
 	{
 		vector<int> vect1 (3,10);
@@ -267,48 +332,7 @@ int	main(void) {
 			cout << ' ' << vect2[i];
 		cout << "\n";
 	}
-	
-	cout << "\033[0;32m** clear **\033[0m\n";
-	{
-		vector<int> vect;
-		vect.push_back (10);
-		vect.push_back (20);
-		vect.push_back (30);
 
-		cout << "the vector contains:";
-		for (size_t i = 0; i < vect.size(); ++i)
-			cout << ' ' << vect[i];
-		cout << "\n";
-
-		vect.clear();
-		vect.push_back (3);
-		vect.push_back (17);
-
-		cout << "the vector now contains:";
-		for (size_t i = 0; i < vect.size(); ++i)
-			cout << ' ' << vect[i];
-		cout << "\n";
-	}
-	cout << "\033[0;32m** get_allocator **\033[0m\n";
-	{
-		vector<int> vect;
-		int*		ptr;
-
-		ptr = vect.get_allocator().allocate(5);
-
-		for (size_t i = 0; i < 5; ++i)
-			vect.get_allocator().construct(&ptr[i],i);
-
-		cout << "The allocated array contains:";
-		for (size_t i = 0; i < 5; ++i)
-			cout << ' ' << ptr[i];
-		cout << "\n";
-
-		for (size_t i = 0; i < 5; ++i)
-			vect.get_allocator().destroy(&ptr[i]);
-		vect.get_allocator().deallocate(ptr,5);
-	}
-	
 	cout << "\033[0;32m** relational operators **\033[0m\n";
 	{
 		vector<int> vect1 (3,20);
@@ -328,7 +352,7 @@ int	main(void) {
 			cout << "vect1 is greater than or equal to vect2\n";
 	}
 
-	cout << "\033[0;32m** swap **\033[0m\n";
+	cout << "\033[0;32m** swap (non-member) **\033[0m\n";
 	{
 		vector<int> vect1 (3,10);
 		vector<int> vect2 (4,20);

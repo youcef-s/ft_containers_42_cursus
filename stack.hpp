@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/16 15:15:53 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/16 16:43:21 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/27 11:11:46 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ namespace ft {
 			typedef typename Container::size_type		size_type;
 
 			explicit stack (const container_type& ctnr = container_type()) : c(ctnr) {}
+			stack( const stack& other ) {*this = other;}
+			~stack() {}
+			stack& operator=( const stack& other ) {c = other.c;return *this;}
 			bool empty() const {return c.empty();}
 			size_type size() const {return c.size();}
 			value_type& top() {return c.back();}
