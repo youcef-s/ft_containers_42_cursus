@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 10:40:16 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:32:50 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ namespace ft {
 			/******************** Capacity ********************/
 			bool empty() const {return _size == 0 ? true : false;}
 			size_type size() const {return _size;}
-			size_type max_size() const {return _alloc.max_size();}
+			size_type max_size() const {return _avl.max_size();}
 			/******************** Modifiers ********************/
 			void clear() {
 				_avl.preOrder(_avl.root);

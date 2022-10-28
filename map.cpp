@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 11:23:19 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 11:24:18 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:39:04 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	main(void) {
 		cout << " <-- const_reverse_iterator\n";
 	}
 
-	cout << "\033[0;32m** empty && size **\033[0m\n";
+	cout << "\033[0;32m** empty && size && max_size **\033[0m\n";
 	{
 		map<char,int> mp;
 		cout << "after creating a fresh map: the map is emoty: ";
@@ -115,6 +115,8 @@ int	main(void) {
 		cout << "after removing the element: the map is emoty: ";
 		cout << std::boolalpha << mp.empty() << "\n";
 		cout << "the size of the map is " << mp.size() << "\n";
+
+		cout << "the max size of the map is: " << mp.max_size() << '\n';
 	}
 
 	cout << "\033[0;32m** clear **\033[0m\n";

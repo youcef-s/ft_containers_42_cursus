@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 12:54:29 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 15:13:05 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:34:47 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ namespace ft {
 		}
 		~Tree(){}
 
+		size_t	max_size() const {return n_alloc.max_size();}
+		
 		int getHeight(Node<T, Alloc> *N) {
 			return N == NULL ? 0 : N->height;
 		}

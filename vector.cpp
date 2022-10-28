@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:44:42 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 11:23:31 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:39:38 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int	main(void) {
 		cout << "\n";
 	}
 
-	cout << "\033[0;32m** size **\033[0m\n";
+	cout << "\033[0;32m** size && max_size **\033[0m\n";
 	{
 		vector<int> vect;
 		cout << "after creating a fresh vector, size: " << vect.size() << "\n";
@@ -184,6 +184,8 @@ int	main(void) {
 
 		vect.pop_back();
 		cout << "after removing an element, size: " << vect.size() << "\n";
+
+		cout << "the max size of the vector is: " << vect.max_size() << '\n';
 	}
 
 	cout << "\033[0;32m** reserve **\033[0m\n";
