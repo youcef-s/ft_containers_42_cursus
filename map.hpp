@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/27 18:50:59 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 10:40:16 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,13 @@ namespace ft {
 			}
 			/******************** Iterators ********************/
 			iterator begin() {return iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root)->data : NULL, &_avl);}
-			const_iterator begin() const {return const_iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root)->data : NULL, &_avl);}
+			const_iterator begin() const {return iterator(_avl.minNode(_avl.root) ? _avl.minNode(_avl.root)->data : NULL, &_avl);}
 			iterator end() {return iterator(NULL, &_avl);}
-			const_iterator end() const {return const_iterator(NULL, &_avl);}
+			const_iterator end() const {return iterator(NULL, &_avl);}
 			reverse_iterator rbegin() {return reverse_iterator(end());}
 			const_reverse_iterator rbegin() const {return const_reverse_iterator(end());}
 			reverse_iterator rend() {return reverse_iterator(begin());}
-			const_reverse_iterator rend() const {return const_reference(begin());}
+			const_reverse_iterator rend() const {return const_reverse_iterator(begin());}
 			/******************** Capacity ********************/
 			bool empty() const {return _size == 0 ? true : false;}
 			size_type size() const {return _size;}
@@ -252,7 +252,7 @@ namespace ft {
 			return false;
 		typename ft::map<Key, T, Compare, Alloc>::const_iterator	lit = lhs.begin();
 		typename ft::map<Key, T, Compare, Alloc>::const_iterator	rit = rhs.begin();
-		for (; lit != lhs.end(); ++lit, ++rit){
+		for (; lit != lhs.end(); ++lit, ++rit) {
 			if (*lit != *rit)
 				return false;
 		}

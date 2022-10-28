@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:44:42 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/27 18:19:45 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 11:23:31 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ using namespace ft;
 using std::cout;
 
 int	main(void) {
+
 	cout << "\033[0;32m** constructors **\033[0m\n";
 	{
 		vector<int> defaultVect;
@@ -183,12 +184,6 @@ int	main(void) {
 
 		vect.pop_back();
 		cout << "after removing an element, size: " << vect.size() << "\n";
-	}
-	
-	cout << "\033[0;32m** max_size **\033[0m\n";
-	{
-		vector<int> vect;
-		cout << "max_size: " << vect.max_size() << "\n";
 	}
 
 	cout << "\033[0;32m** reserve **\033[0m\n";

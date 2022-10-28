@@ -6,12 +6,13 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 10:31:47 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/27 11:21:50 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 11:30:13 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "stack.hpp"
 #include <stack>
+#include <vector>
 
 using namespace ft;
 using std::cout;
@@ -22,9 +23,9 @@ int	main(void) {
 	{
 		vector<int> vect (3,10);
 
-		stack<int> stk(vect);
-		stack<int> stk2(stk);
-		stack<int> stk3;
+		stack<int, vector<int> > stk(vect);
+		stack<int, vector<int> > stk2(stk);
+		stack<int, vector<int> > stk3;
 
 		stk3 = stk;
 		cout << "size of the first stack: " << stk.size() << '\n';
@@ -34,7 +35,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** empty **\033[0m\n";
 	{
-		stack<int> stk;
+		stack<int, vector<int> > stk;
 		cout << "after creating a fresh stack, the stack is empty: ";
 		cout << std::boolalpha << stk.empty() << "\n";
 
@@ -52,7 +53,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** top && push && pop **\033[0m\n";
 	{
-		stack<int> stk;
+		stack<int, vector<int> > stk;
 
 		stk.push(3);
 		cout << "the top of the stack after pushing 3 is: " << stk.top() << "\n";
@@ -66,8 +67,8 @@ int	main(void) {
 	{
 		vector<int>	vect1(3, 10);
 		vector<int>	vect2(4, 20);
-		stack<int> stack1(vect1);
-		stack<int> stack2(vect2);
+		stack<int, vector<int> > stack1(vect1);
+		stack<int, vector<int> > stack2(vect2);
 
 		if (stack1 == stack2)
 			cout << "stack1 and stack2 are equal\n";
