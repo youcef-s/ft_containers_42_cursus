@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 12:54:29 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/26 11:12:48 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 15:13:05 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,15 @@ namespace ft {
 				height = 1;
 			}
 			Node &operator=(Node const &src) {
+				if(data)
+					_alloc.deallocate(data, 1);
 				left = src.left;
 				right = src.right;
 				parent = src.parent;
 				height = src.height;
 				data = _alloc.allocate(1);
 				_alloc.construct(data, *src.data);
-				return (*this);
+				return *this;
 			}
 			~Node() {}
 	};
