@@ -345,7 +345,7 @@ int	main(void) {
 		map2['b'] = 5;
 		map2['c'] = 7;
 
-		std::swap(map1, map2);
+		swap(map1, map2);
 
 		for (map<char,int>::iterator it = map1.begin(); it != map1.end(); ++it)
 			cout << it->first << " = " << it->second << '\t';
