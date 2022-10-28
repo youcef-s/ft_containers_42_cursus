@@ -1,53 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector.cpp                                         :+:      :+:    :+:   */
+/*   std_vector.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 16:44:42 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 16:39:38 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:28:46 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.hpp"
+#include <iostream>
 #include <vector>
 
-using namespace ft;
 using std::cout;
 
 int	main(void) {
 
 	cout << "\033[0;32m** constructors **\033[0m\n";
 	{
-		vector<int> defaultVect;
-		vector<int> fillVect(4,100);
-		vector<int> rangeVect(fillVect.begin(), fillVect.end());
-		vector<int> copyVect(rangeVect);  
+		std::vector<int> defaultVect;
+		std::vector<int> fillVect(4,100);
+		std::vector<int> rangeVect(fillVect.begin(), fillVect.end());
+		std::vector<int> copyVect(rangeVect);  
 
 		cout << "The contents of the vector are:";
-		for (vector<int>::iterator it = copyVect.begin(); it != copyVect.end(); ++it)
+		for (std::vector<int>::iterator it = copyVect.begin(); it != copyVect.end(); ++it)
 			cout << ' ' << *it;
 		cout << "\n";
 	}
 
 	cout << "\033[0;32m** operator= **\033[0m\n";
 	{
-		vector<int> origin(3,10);
-		vector<int> copy(5,20);
+		std::vector<int> origin(3,10);
+		std::vector<int> copy(5,20);
 
 		copy = origin;
 
 		cout << "The contents of the copy are:";
-		for (vector<int>::iterator it = copy.begin(); it != copy.end(); ++it)
+		for (std::vector<int>::iterator it = copy.begin(); it != copy.end(); ++it)
 			cout << ' ' << *it;
 		cout << "\n";
 	}
 
 	cout << "\033[0;32m** assign **\033[0m\n";
 	{
-		vector<int>	vect;
-		vector<int>	vect2;
+		std::vector<int>	vect;
+		std::vector<int>	vect2;
 		vect.assign(5, 12);
 		vect2.assign(vect.begin(), vect.end() - 2);
 		
@@ -59,7 +58,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** get_allocator **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 		int*		ptr;
 
 		ptr = vect.get_allocator().allocate(5);
@@ -79,7 +78,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** at **\033[0m\n";
 	{
-		vector<int> vect(10);
+		std::vector<int> vect(10);
 
 		for (size_t i = 0; i < vect.size(); ++i)
 			vect.at(i) = i;
@@ -92,7 +91,7 @@ int	main(void) {
 	
 	cout << "\033[0;32m** operator[] **\033[0m\n";
 	{
-		vector<int> vect (10);
+		std::vector<int> vect (10);
 
 		for (size_t i = 0; i < vect.size(); ++i)
 			vect[i] = i;
@@ -105,7 +104,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** front **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 
 		vect.push_back(8);
 		vect.push_back(6);
@@ -114,7 +113,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** back **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 		vect.push_back(10);
 		vect.push_back(12);
 		cout << "the back of the vector is " << vect.back() << '\n';
@@ -122,7 +121,7 @@ int	main(void) {
 	
 	cout << "\033[0;32m** data **\033[0m\n";
 	{
-		vector<int>	vect(3, 10);
+		std::vector<int>	vect(3, 10);
 		
 		cout << "the vector contains:";
 		for (size_t i = 0; i < vect.size(); ++i)
@@ -132,7 +131,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** begin and end **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 
 		for (int i = 1; i <= 5; ++i)
 			vect.push_back(i);
@@ -143,19 +142,19 @@ int	main(void) {
 
 	cout << "\033[0;32m** rbegin and rend **\033[0m\n";
 	{
-		vector<int> vect(5);
-		vector<int>::iterator rit = vect.begin();
+		std::vector<int> vect(5);
+		std::vector<int>::iterator rit = vect.begin();
 		for (int i = 0; rit!= vect.end(); ++rit, ++i)
 			*rit = i;
 		cout << "the vector elements in erverse order:";
-		for (vector<int>::reverse_iterator it = vect.rbegin(); it != vect.rend(); ++it)
+		for (std::vector<int>::reverse_iterator it = vect.rbegin(); it != vect.rend(); ++it)
 			cout << ' ' << *it;
 		cout << "\n";
 	}
 
 	cout << "\033[0;32m** empty **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 
 		cout << "before filling the vector, vect is empty: ";
 		cout << std::boolalpha << vect.empty();
@@ -169,7 +168,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** size && max_size **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 		cout << "after creating a fresh vector, size: " << vect.size() << "\n";
 
 		for (int i = 0; i < 10; ++i)
@@ -190,7 +189,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** reserve **\033[0m\n";
 	{
-		vector<int>	vect(10, 10);
+		std::vector<int>	vect(10, 10);
 		cout << "capacity before reserving anything: " << vect.capacity() << "\n";
 		vect.reserve(20);
 		cout << "capacity after reserving 20 elements: " << vect.capacity() << "\n";
@@ -200,7 +199,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** capacity **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 
 		cout << "The progress of the capacity:";
 		for (int i = 0; i < 20; ++i) {
@@ -212,7 +211,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** clear **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 		vect.push_back (10);
 		vect.push_back (20);
 		vect.push_back (30);
@@ -234,15 +233,15 @@ int	main(void) {
 
 	cout << "\033[0;32m** insert **\033[0m\n";
 	{
-		vector<int> vect (5,10);
-		vector<int>::iterator it;
+		std::vector<int> vect (5,10);
+		std::vector<int>::iterator it;
 
 		it = vect.insert(vect.begin(), 20);
 
 		vect.insert (it,2,30);
 		it = vect.begin();
 
-		vector<int> vect2 (2,40);
+		std::vector<int> vect2 (2,40);
 		vect.insert (it + 2, vect2.begin(), vect2.end());
 
 		cout << "the vector contains:";
@@ -253,7 +252,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** erase **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 
 		for (int i = 1; i <= 10; ++i)
 			vect.push_back(i);
@@ -269,7 +268,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** push_back **\033[0m\n";
 	{
-		vector<int>	vect;
+		std::vector<int>	vect;
 		for(size_t i = 1; i < 10; ++i)
 			vect.push_back(i * 10);
 		cout << "the vector contains: ";
@@ -280,7 +279,7 @@ int	main(void) {
 	
 	cout << "\033[0;32m** pop_back **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 	
 		for(size_t i = 0; i < 10; ++i)
 			vect.push_back(i);
@@ -297,7 +296,7 @@ int	main(void) {
 
 	cout << "\033[0;32m** resize **\033[0m\n";
 	{
-		vector<int> vect;
+		std::vector<int> vect;
 
 		for (int i = 1; i < 10; ++i)
 			vect.push_back(i);
@@ -314,8 +313,8 @@ int	main(void) {
 
 	cout << "\033[0;32m** swap **\033[0m\n";
 	{
-		vector<int> vect1 (3,10);
-		vector<int> vect2 (4,20);
+		std::vector<int> vect1 (3,10);
+		std::vector<int> vect2 (4,20);
 
 		vect1.swap(vect2);
 
@@ -332,8 +331,8 @@ int	main(void) {
 
 	cout << "\033[0;32m** relational operators **\033[0m\n";
 	{
-		vector<int> vect1 (3,20);
-		vector<int> vect2 (4,10);
+		std::vector<int> vect1 (3,20);
+		std::vector<int> vect2 (4,10);
 
 		if (vect1==vect2)
 			cout << "vect1 and vect2 are equal\n";
@@ -351,8 +350,8 @@ int	main(void) {
 
 	cout << "\033[0;32m** swap (non-member) **\033[0m\n";
 	{
-		vector<int> vect1 (3,10);
-		vector<int> vect2 (4,20);
+		std::vector<int> vect1 (3,10);
+		std::vector<int> vect2 (4,20);
 
 		swap(vect1, vect2);
 
