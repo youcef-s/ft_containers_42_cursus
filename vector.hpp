@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/26 16:11:06 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 17:44:20 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ namespace ft {
 				return _alloc;
 			}
 			void assign( size_type count, const T& value ) {
-				_size = 0;
+				clear();
 				reserve(count);
 				for(size_type i = 0; i < count; ++i)
 					push_back(value);
@@ -139,8 +139,10 @@ namespace ft {
 				vector<value_type>	tmp;
 
 				tmp.assign(position, end());
-				_size = static_cast<size_type>(std::distance(begin(), position));
-				size_type tmpsize = _size;
+				size_type tmpsize = static_cast<size_type>(std::distance(begin(), position));
+				for (size_type i = tmpsize; i < _size; ++i)
+					_alloc.destroy(_ptr + i);
+				_size = tmpsize;
 				push_back(val);
 				for (size_type i = 0; i < tmp.size(); ++i)
 					push_back(tmp[i]);
@@ -149,11 +151,14 @@ namespace ft {
 			void insert (iterator position, size_type n, const value_type& val) {
 				vector<value_type>	tmp;
 				tmp.assign(position, end());
-				if (n + _capacity > _capacity * 2)
+				if (n > _capacity)
 					reserve(_size + n);
 				else if (!_size)
 					reserve(n);
-				_size = position - begin();
+				size_type tmpsize = static_cast<size_type>(std::distance(begin(), position));
+				for (size_type i = tmpsize; i < _size; ++i)
+					_alloc.destroy(_ptr + i);
+				_size = tmpsize;
 				for (size_type i = 0;i < n; ++i)
 					push_back(val);
 				for(size_type i = 0; i < tmp.size(); ++i)
@@ -163,7 +168,10 @@ namespace ft {
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL) {
 				vector<value_type>	tmp;
 				tmp.assign(position, end());
-				_size = static_cast<size_type>(std::distance(begin(), position));
+				size_type tmpsize = static_cast<size_type>(std::distance(begin(), position));
+				for (size_type i = tmpsize; i < _size; ++i)
+					_alloc.destroy(_ptr + i);
+				_size = tmpsize;
 				for (; first != last; ++first)
 					push_back(*first);
 				for (size_type i = 0; i < tmp.size(); ++i)

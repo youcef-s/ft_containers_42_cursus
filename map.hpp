@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 16:32:50 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 17:55:24 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ namespace ft {
 
 	template< class Key, class T, class Compare = std::less<Key>,
 		class Allocator = std::allocator<ft::pair<const Key, T> > > class map {
-
-		public:
+		private:
 			Tree<ft::pair<const Key, T> , Compare, Allocator>		_avl;
 			Allocator												_alloc;
 			Compare													_cmp;

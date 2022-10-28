@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 12:54:29 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 16:34:47 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/28 18:00:35 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ namespace ft {
 		Node<T, Alloc>											*root;
 		Comp													compare;
 		Alloc													_alloc;
-		typename Alloc::template rebind<Node<T, Alloc> >::other	n_alloc;
+		typename Alloc::template rebind<Node<T, Alloc> >::other	node_alloc;
 
 		Tree(): root(NULL) {}
 		Tree(const Tree &src) {
@@ -73,7 +73,7 @@ namespace ft {
 		}
 		~Tree(){}
 
-		size_t	max_size() const {return n_alloc.max_size();}
+		size_t	max_size() const {return node_alloc.max_size();}
 		
 		int getHeight(Node<T, Alloc> *N) {
 			return N == NULL ? 0 : N->height;
@@ -81,9 +81,11 @@ namespace ft {
 
 		Node<T, Alloc> *rightRotate(Node<T, Alloc> *oldTop) {
 			Node<T, Alloc> *newTop = oldTop->left;
-			if (!newTop) return oldTop;
+			if (!newTop)
+				return oldTop;
 			Node<T, Alloc> *tmpR = newTop->right;
-			if (newTop->right) newTop->right->parent = oldTop;
+			if (newTop->right)
+				newTop->right->parent = oldTop;
 			newTop->right = oldTop;
 			oldTop->left = tmpR;
 			newTop->parent = oldTop->parent;
@@ -96,7 +98,8 @@ namespace ft {
 		Node<T, Alloc> *leftRotate(Node<T, Alloc> *oldTop) {
 			Node<T, Alloc> *newTop = oldTop->right;
 			Node<T, Alloc> *tmpL = newTop->left;
-			if (newTop->left) newTop->left->parent = oldTop;
+			if (newTop->left)
+				newTop->left->parent = oldTop;
 			newTop->left = oldTop;
 			oldTop->right = tmpL;
 			newTop->parent = oldTop->parent;
@@ -137,8 +140,8 @@ namespace ft {
 		}
 
 		Node<T, Alloc> *newNode(T const &key) {
-			Node<T, Alloc>* node = n_alloc.allocate(1);
-			n_alloc.construct(node, key);
+			Node<T, Alloc>* node = node_alloc.allocate(1);
+			node_alloc.construct(node, key);
 			return (node);
 		}
 		Node<T, Alloc>* insert(Node<T, Alloc>* node, const T& key) {
@@ -163,7 +166,7 @@ namespace ft {
 				preOrder(node->left);
 				_alloc.deallocate(node->data, 1);
 				preOrder(node->right);
-				n_alloc.deallocate(node, 1);
+				node_alloc.deallocate(node, 1);
 				node = NULL;
 			}
 		}
@@ -215,8 +218,8 @@ namespace ft {
 					}
 					_alloc.destroy(temp->data);
 					_alloc.deallocate(temp->data , 1);
-					n_alloc.destroy(temp);
-					n_alloc.deallocate(temp, 1);
+					node_alloc.destroy(temp);
+					node_alloc.deallocate(temp, 1);
 				}
 				else {
 					Node<T, Alloc> *tmp = minNode(node->right);
