@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 17:55:24 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/10/29 17:18:51 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ namespace ft {
 			}
 			const_iterator find( const Key& key ) const {
 				Node<value_type, Allocator>* node = _avl.search(_avl.root, ft::make_pair(key, mapped_type()));
-				return node ? const_iterator(&node->data, &_avl) : const_iterator(NULL, &_avl);
+				return node ? iterator(node->data, &_avl) : iterator(NULL, &_avl);
 			}
 			iterator lower_bound( const Key& key ) {
 				Node<value_type, Allocator>* rootTmp = _avl.root;	
@@ -200,7 +200,7 @@ namespace ft {
 					else
 						rootTmp = rootTmp->right;
 				}
-				return res ? const_iterator(res->data, &_avl) : const_iterator(NULL, &_avl);
+				return res ? iterator(res->data, &_avl) : iterator(NULL, &_avl);
 			}
 			iterator upper_bound( const Key& key ) {
 				Node<value_type, Allocator>*	rootTmp = _avl.root;	
@@ -221,14 +221,14 @@ namespace ft {
 				Node<value_type, Allocator>*	res = _avl.root;
 
 				while (rootTmp) {
-					if (key, _cmp(rootTmp->data->first)) {
+					if (_cmp(key, rootTmp->data->first)) {
 						res = rootTmp;
 						rootTmp = rootTmp->left;
 					}
 					else
 						rootTmp = rootTmp->right;
 				}
-				return res ? const_iterator(res->data, &_avl) : const_iterator(NULL, &_avl);
+				return res ? iterator(res->data, &_avl) : iterator(NULL, &_avl);
 			}
 			ft::pair<iterator,iterator> equal_range( const Key& key ) {
 				return ft::make_pair(lower_bound(key), upper_bound(key));
