@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:04:27 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/28 17:44:20 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/11/03 13:29:23 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,9 +231,17 @@ namespace ft {
 				}
 			}
 			void swap( vector& other ) {
-				std::swap(_size, other._size);
-				std::swap(_capacity, other._capacity);
-				std::swap(_ptr, other._ptr);
+				size_type	tmpsize = _size;
+				_size = other._size;
+				other._size = tmpsize;
+				
+				size_type tmpcapacity = _capacity;
+				_capacity = other._capacity;
+				other._capacity = tmpcapacity;
+				
+				pointer	tmpptr = _ptr;
+				_ptr = other._ptr;
+				other._ptr = tmpptr;
 			}
 			/******************** Element access ********************/
 			reference at( size_type pos ) {

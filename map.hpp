@@ -6,7 +6,7 @@
 /*   By: ylabtaim <ylabtaim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 11:13:15 by ylabtaim          #+#    #+#             */
-/*   Updated: 2022/10/29 17:18:51 by ylabtaim         ###   ########.fr       */
+/*   Updated: 2022/11/03 13:56:10 by ylabtaim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ namespace ft {
 						_avl.insert(*first);
 				}
 			}
-			map (const map& x) {_size = 0; *this = x;}
+			map (const map& x) {*this = x;}
 			map& operator=( const map& other ) {
 				clear();
 				_avl.clone(other._avl.root);
@@ -157,9 +157,17 @@ namespace ft {
 				return n;
 			}
 			void swap( map& other ) {
-				map	tmp = other;
-				other = *this;
-				*this = tmp;
+	
+				Tree<ft::pair<const Key, T> , Compare, Allocator> tmptree;
+				tmptree = other._avl;
+				other._avl = _avl;
+				_avl = tmptree;
+
+				size_type tmpsize = other._size;
+				other._size = _size;
+				_size = tmpsize;
+
+				std::swap(_cmp, other._cmp);
 			}
 			/******************** Lookup ********************/
 			size_type count( const Key& key ) const {
