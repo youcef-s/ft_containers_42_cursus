@@ -150,12 +150,12 @@ namespace ft {
 			}
 			void insert (iterator position, size_type n, const value_type& val) {
 				vector<value_type>	tmp;
+				size_type tmpsize = static_cast<size_type>(std::distance(begin(), position));
 				tmp.assign(position, end());
 				if (n > _capacity)
 					reserve(_size + n);
 				else if (!_size)
 					reserve(n);
-				size_type tmpsize = static_cast<size_type>(std::distance(begin(), position));
 				for (size_type i = tmpsize; i < _size; ++i)
 					_alloc.destroy(_ptr + i);
 				_size = tmpsize;
