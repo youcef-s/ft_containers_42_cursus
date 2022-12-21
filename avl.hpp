@@ -133,7 +133,7 @@ namespace ft {
 			}
 			return node;
 		}
-		Node<T, Alloc>* rebalanceForDeletion(Node<T, Alloc>* node, const T& key) {
+		Node<T, Alloc>* rebalanceForDeletion(Node<T, Alloc>* node) {
 			int Balance = getBalance(node);
 			if (Balance > 1) {
 				if (getBalance(node->left) >= 0)
@@ -250,7 +250,7 @@ namespace ft {
 			if (node == NULL)
 				return NULL;
 			node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
-			return rebalanceForDeletion(node, key);
+			return rebalanceForDeletion(node);
 		}
 		Node<T, Alloc>* search(Node<T, Alloc>* node, const T& key) const {
 			if (node == NULL)
