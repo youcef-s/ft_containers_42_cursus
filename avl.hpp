@@ -133,7 +133,27 @@ namespace ft {
 			}
 			return node;
 		}
-
+		Node<T, Alloc>* rebalanceForDeletion(Node<T, Alloc>* node, const T& key) {
+			int Balance = getBalance(node);
+			if (Balance > 1) {
+				if (getBalance(node->left) >= 0)
+					return rightRotate(node);
+				else {
+					node->left = leftRotate(node->left);
+					return rightRotate(node);
+				}
+			}
+			if (Balance < -1) {
+				if (getBalance(node->right) <= 0) {
+					return leftRotate(node);
+			}
+				else {
+					node->right = rightRotate(node->right);
+					return leftRotate(node);
+				}
+			}
+			return node;
+		}
 		Node<T, Alloc>* insert(T key) {
 			root = insert(root, key);
 			return root;
@@ -230,7 +250,7 @@ namespace ft {
 			if (node == NULL)
 				return NULL;
 			node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
-			return rebalance(node, key);
+			return rebalanceForDeletion(node, key);
 		}
 		Node<T, Alloc>* search(Node<T, Alloc>* node, const T& key) const {
 			if (node == NULL)
