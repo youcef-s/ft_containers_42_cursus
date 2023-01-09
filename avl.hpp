@@ -255,8 +255,6 @@ namespace ft {
 		Node<T, Alloc>* search(Node<T, Alloc>* node, const T& key) const {
 			if (node == NULL)
 				return NULL;
-			if (node->data && node->data->first == key.first)
-				return (node);
 			if (compare(key.first, node->data->first))
 				return (search(node->left, key));
 			else if (compare(node->data->first, key.first))
